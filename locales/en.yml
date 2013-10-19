@@ -1,0 +1,7 @@
+en:
+  vagrant_mutate:
+    errors:
+      provider_not_supported: |-
+        Provider %{provider} is not supported
+      qemu_not_found: |-
+          qemu-img was not found in your path
