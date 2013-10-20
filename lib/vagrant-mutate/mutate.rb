@@ -16,15 +16,22 @@ module VagrantMutate
         return
       end
 
-      box = argv[0]
+      box_arg = argv[0]
       output_provider = argv[1]
 
-      unless SUPPORTED_PROVIDERS.include? output_provider
+      unless SUPPORTED_OUTPUT_PROVIDERS.include? output_provider
         raise Errors::ProviderNotSupported,
           :provider => output_provider
       end
 
       c = Converter.new
+
+      if box_arg =~ /\.box$/
+        input_box_dir = c.unpack_box(box_arg)
+        @env.ui.info ( input_box_dir )
+      else
+        @env.ui.info ('Mutating box by name is not implemented yet')
+      end
 
       @env.ui.info( 'Hello from vagrant mutate' )
     end

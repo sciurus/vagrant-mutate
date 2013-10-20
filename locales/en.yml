@@ -4,4 +4,10 @@ en:
       provider_not_supported: |-
         Provider %{provider} is not supported
       qemu_not_found: |-
-          qemu-img was not found in your path
+        qemu-img was not found in your path
+      box_file_not_found: |-
+        The box file %{box} was not found
+      extract_box_failed: |-
+        Extracting box failed with error:
+        
+        %{error_message}

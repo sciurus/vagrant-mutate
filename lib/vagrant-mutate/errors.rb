@@ -14,5 +14,13 @@ module VagrantMutate
       error_key(:qemu_not_found)
     end
 
+    class BoxFileNotFound < VagrantMutateError
+      error_key(:box_file_not_found)
+    end
+
+    class ExtractBoxFailed < VagrantMutateError
+      error_key(:extract_box_failed)
+    end
+
   end
 end
