@@ -24,28 +24,25 @@ module VagrantMutate
       end
 
       c = Converter.new(@env)
+      input_box = Box.new(@env)
 
       if box_arg =~ /\.box$/
-        box_name = box_arg[0..-5]
-        input_box_dir = c.unpack_box(box_arg)
-        cleanup_input = true
+        input_box.load_from_file(box_arg)
       else
-        box_name = box_arg
-        cleanup_input = false
-        @env.ui.info ('Mutating box by name is not implemented yet')
-        return
+        input_box.load_by_name(box_arg)
       end
 
-      input_provider = c.determine_provider(input_box_dir)
+      input_provider = input_box.provider
       unless SUPPORTED_INPUT_PROVIDERS.include? input_provider
         raise Errors::ProviderNotSupported, :provider => input_provider
       end
 
-      c.convert(input_box_dir, input_provider, output_provider, box_name)
+      output_box = Box.new(@env)
+      output_box.prepare_for_output( input_box.name, output_provider)
 
-      if cleanup_input == true
-        c.cleanup(input_box_dir)
-      end
+      c.convert(input_box, output_box)
+
+      input_box.cleanup
 
     end
 

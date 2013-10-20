@@ -5,8 +5,8 @@ en:
         Provider %{provider} is not supported
       qemu_not_found: |-
         qemu-img was not found in your path
-      box_file_not_found: |-
-        The box file %{box} was not found
+      box_not_found: |-
+        The box at %{box} was not found
       extract_box_failed: |-
         Extracting box failed with error:
         
