@@ -26,5 +26,9 @@ module VagrantMutate
       error_key(:determine_provider_failed)
     end
 
+    class MetadataWriteError < VagrantMutateError
+      error_key(:metadata_write_error)
+    end
+
   end
 end

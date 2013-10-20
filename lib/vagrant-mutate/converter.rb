@@ -9,7 +9,8 @@ module VagrantMutate
     include Archive::Tar
 
     # http://stackoverflow.com/questions/2108727/which-in-ruby-checking-if-program-exists-in-path-from-ruby
-    def initialize
+    def initialize(env)
+      @env = env
       exts = ENV['PATHEXT'] ? ENV['PATHEXT'].split(';') : ['']
       ENV['PATH'].split(File::PATH_SEPARATOR).each do |path|
         exts.each do |ext|
@@ -50,6 +51,45 @@ module VagrantMutate
         raise Errors::DetermineProviderFailed, :error_message => e.message
       end
       return metadata['provider']
+    end
+
+    def write_metadata(dir, provider)
+      metadata = { 'provider' => provider }
+      begin
+        File.open( File.join( dir, 'metadata.json'), 'w') do |f|
+          f.write( JSON.generate(metadata) )
+        end
+      rescue => e
+        raise Errors::MetadataWriteError, :error_message => e.message
+      end
+    end
+
+    def write_disk(box_dir, input_provider, output_provider)
+      begin
+        # qemu-img invocation goes here
+      rescue
+      end
+    end
+
+    def package_box(box_dir, box_name)
+      begin
+        # tar it up
+      rescue
+      end
+    end
+
+    def cleanup(dir)
+      @env.ui.info('Cleaning up temporary files')
+      FileUtils.remove_entry_secure(dir)
+      @env.ui.info('Cleanup done')
+    end
+
+    def convert(input_box_dir, input_provider, output_provider, box_name)
+      output_box_dir = Dir.mktmpdir
+      write_metadata(output_box_dir, output_provider)
+      write_disk(output_box_dir, input_provider, output_provider)
+      package_box(output_box_dir, box_name)
+      cleanup(output_box_dir)
     end
 
   end
