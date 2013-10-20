@@ -22,5 +22,9 @@ module VagrantMutate
       error_key(:extract_box_failed)
     end
 
+    class DetermineProviderFailed < VagrantMutateError
+      error_key(:determine_provider_failed)
+    end
+
   end
 end

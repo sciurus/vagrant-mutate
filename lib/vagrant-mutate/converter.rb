@@ -1,5 +1,6 @@
-require 'zlib'
 require 'archive/tar/minitar'
+require 'json'
+require 'zlib'
 
 module VagrantMutate
 
@@ -33,13 +34,22 @@ module VagrantMutate
       end
 
       begin
-        dir = Dir.mktmpdir
-        Minitar.unpack(tar, dir)
+        box_dir = Dir.mktmpdir
+        Minitar.unpack(tar, box_dir)
       rescue => e
         raise Errors::ExtractBoxFailed, :error_message => e.message
       end
 
-      return dir
+      return box_dir
+    end
+
+    def determine_provider(box_dir)
+      begin
+        metadata = JSON.load( File.new( File.join(box_dir, 'metadata.json'), 'r') )
+      rescue => e
+        raise Errors::DetermineProviderFailed, :error_message => e.message
+      end
+      return metadata['provider']
     end
 
   end

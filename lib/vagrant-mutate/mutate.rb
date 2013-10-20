@@ -33,6 +33,12 @@ module VagrantMutate
         @env.ui.info ('Mutating box by name is not implemented yet')
       end
 
+      input_provider = c.determine_provider(input_box_dir)
+      unless SUPPORTED_INPUT_PROVIDERS.include? input_provider
+        raise Errors::ProviderNotSupported,
+          :provider => input_provider
+      end
+
       @env.ui.info( 'Hello from vagrant mutate' )
     end
 

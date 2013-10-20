@@ -11,3 +11,7 @@ en:
         Extracting box failed with error:
         
         %{error_message}
+      determine_provider_failed: |-
+        Determining provider for box failed with error:
+        
+        %{error_message}
