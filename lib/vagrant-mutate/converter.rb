@@ -5,6 +5,7 @@ module VagrantMutate
     # http://stackoverflow.com/questions/2108727/which-in-ruby-checking-if-program-exists-in-path-from-ruby
     def initialize(env)
       @env = env
+      @logger = Log4r::Logger.new('vagrant::mutate')
       exts = ENV['PATHEXT'] ? ENV['PATHEXT'].split(';') : ['']
       ENV['PATH'].split(File::PATH_SEPARATOR).each do |path|
         exts.each do |ext|
@@ -13,6 +14,7 @@ module VagrantMutate
         end
       end
       # if we make it here qemu-img command was not found
+      @logger.info "Found qemu"
       raise Errors::QemuNotFound
     end
 
@@ -25,6 +27,7 @@ module VagrantMutate
       rescue => e
         raise Errors::MetadataWriteError, :error_message => e.message
       end
+      @logger.info "Wrote metadata"
     end
 
     def write_disk(input_box, output_box)
@@ -32,6 +35,7 @@ module VagrantMutate
         # qemu-img invocation goes here
       rescue
       end
+      @logger.info "Would have wrote disk"
     end
 
     def convert(input_box, output_box)
