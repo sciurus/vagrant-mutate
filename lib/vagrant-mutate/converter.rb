@@ -35,7 +35,7 @@ module VagrantMutate
     end
 
     def convert(input_box, output_box)
-      write_metadata(output_box.dir, output_box.provider)
+      write_metadata(output_box)
       write_disk(input_box, output_box)
     end
 
