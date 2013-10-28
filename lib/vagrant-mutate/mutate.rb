@@ -1,3 +1,4 @@
+require 'vagrant-mutate/box'
 require 'vagrant-mutate/converter'
 
 module VagrantMutate
