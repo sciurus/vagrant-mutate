@@ -10,11 +10,13 @@ module VagrantMutate
       ENV['PATH'].split(File::PATH_SEPARATOR).each do |path|
         exts.each do |ext|
           exe = File.join(path, "qemu-img#{ext}")
-          return if File.executable? exe
+          if File.executable? exe
+            @logger.info "Found qemu"
+            return
+          end
         end
       end
       # if we make it here qemu-img command was not found
-      @logger.info "Found qemu"
       raise Errors::QemuNotFound
     end
 
