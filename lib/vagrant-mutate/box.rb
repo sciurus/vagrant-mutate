@@ -1,4 +1,5 @@
 require 'archive/tar/minitar'
+require 'fileutils'
 require 'json'
 require 'zlib'
 
@@ -51,7 +52,7 @@ module VagrantMutate
     end
 
     def find_input_dir
-      in_dir = File.join( @env['boxes_path'], @name, 'virtualbox' )
+      in_dir = File.join( @env.boxes_path, @name, 'virtualbox' )
       if File.directory?(in_dir)
         return in_dir
       else
@@ -61,9 +62,9 @@ module VagrantMutate
 
     def create_output_dir
       # e.g. $HOME/.vagrant.d/boxes/fedora-19/libvirt
-      out_dir = File.join( @env['boxes_path'], @name, @provider )
+      out_dir = File.join( @env.boxes_path, @name, @provider )
       begin
-        Dir.mkdir(out_dir)
+        FileUtils.mkdir_p(out_dir)
       rescue => e
         raise Errors::CreateBoxDirFailed, :error_message => e.message
       end
