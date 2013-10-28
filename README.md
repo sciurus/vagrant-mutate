@@ -1,6 +1,8 @@
 # Vagrant-Mutate
 
-A vagrant plugin convert vagrant boxes to work with different providers
+A vagrant plugin convert vagrant boxes to work with different providers.
+
+This is still a work in progress; it doesn't perform the conversion yet
 
 ## Installation
 
