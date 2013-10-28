@@ -15,7 +15,7 @@ module VagrantMutate
     end
 
     class BoxNotFound < VagrantMutateError
-      error_key(:box_file_not_found)
+      error_key(:box_not_found)
     end
 
     class ExtractBoxFailed < VagrantMutateError
@@ -24,6 +24,10 @@ module VagrantMutate
 
     class DetermineProviderFailed < VagrantMutateError
       error_key(:determine_provider_failed)
+    end
+
+    class CreateBoxDirFailed < VagrantMutateError
+      error_key(:create_box_dir_failed)
     end
 
     class MetadataWriteError < VagrantMutateError

@@ -15,6 +15,10 @@ en:
         Determining provider for box failed with error:
         
         %{error_message}
+      create_box_dir_failed: |-
+        Creating directory for box failed with error:
+        
+        %{error_message}
       metadata_write_error: |-
         Writing metadata for box failed with error:
         
