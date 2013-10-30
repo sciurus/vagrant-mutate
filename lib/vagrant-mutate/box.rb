@@ -29,7 +29,7 @@ module VagrantMutate
 
     def load_from_file(file)
       @logger.info "Loading box from file #{file}"
-      @name = file[0..-5]
+      @name = File.basename( file, File.extname(file) )
       @dir = unpack(file)
       @dir_is_tmp = true
       @provider = determine_provider()
