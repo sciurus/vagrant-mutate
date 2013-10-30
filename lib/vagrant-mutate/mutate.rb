@@ -37,6 +37,8 @@ module VagrantMutate
 
       input_box.cleanup
 
+      @env.ui.info "The box #{output_box.name} (#{output_box.provider.name}) is now ready to use."
+
     end
 
   end

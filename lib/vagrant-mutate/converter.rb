@@ -68,7 +68,7 @@ module VagrantMutate
 
     def convert(input_box, output_box)
       @env.ui.info "Converting #{input_box.name} from #{input_box.provider.name} "\
-        "to #{output_box.provider.name}. Please be patient."
+        "to #{output_box.provider.name}."
       write_metadata(output_box)
       write_disk(input_box, output_box)
     end

@@ -50,6 +50,7 @@ module VagrantMutate
 
     def cleanup
       if @dir_is_tmp
+        @env.ui.info "Cleaning up temporary files."
         @logger.info "Deleting #{dir}"
         FileUtils.remove_entry_secure(@dir)
       end
@@ -88,6 +89,7 @@ module VagrantMutate
     end
 
     def unpack(file)
+      @env.ui.info "Extracting box file to a temporary directory."
       unless File.exists? file
         raise Errors::BoxNotFound, :box => file
       end
