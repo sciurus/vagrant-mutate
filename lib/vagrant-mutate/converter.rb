@@ -42,31 +42,33 @@ module VagrantMutate
     end
 
     def copy_disk(input_box, output_box)
-        input = File.join( input_box.dir, input_box.provider.image_name )
-        output = File.join( output_box.dir, output_box.provider.image_name )
-        @logger.info "Copying #{input} to #{output}"
-        begin
-          FileUtils.copy_file(input, output)
-        rescue => e
-          raise Errors::WriteDiskFailed, :error_message => e.message
-        end
+      input = File.join( input_box.dir, input_box.provider.image_name )
+      output = File.join( output_box.dir, output_box.provider.image_name )
+      @logger.info "Copying #{input} to #{output}"
+      begin
+        FileUtils.copy_file(input, output)
+      rescue => e
+        raise Errors::WriteDiskFailed, :error_message => e.message
+      end
     end
 
     def convert_disk(input_box, output_box)
-        input = File.join( input_box.dir, input_box.provider.image_name )
-        output = File.join( output_box.dir, output_box.provider.image_name )
-        @logger.info "Converting #{input_box.provider.image_format} disk #{input} "\
-          "to #{output_box.provider.image_format} disk #{output}"
-      begin
-        # qemu-img invocation goes here
-      rescue => e
-          raise Errors::WriteDiskFailed, :error_message => e.message
+      input_file    = File.join( input_box.dir, input_box.provider.image_name )
+      output_file   = File.join( output_box.dir, output_box.provider.image_name )
+      input_format  = input_box.provider.image_format
+      output_format = output_box.provider.image_format
+
+      command = "qemu-img convert -p -f #{input_format} -O #{output_format} #{input_file} #{output_file}"
+      @logger.info "Running #{command}"
+      unless system(command)
+        raise Errors::WriteDiskFailed, :error_message => "qemu-img exited with status #{$?.exitstatus}"
       end
+
     end
 
     def convert(input_box, output_box)
       @env.ui.info "Converting #{input_box.name} from #{input_box.provider.name} "\
-        "to #{output_box.provider.name}. Please be patient..."
+        "to #{output_box.provider.name}. Please be patient."
       write_metadata(output_box)
       write_disk(input_box, output_box)
     end
