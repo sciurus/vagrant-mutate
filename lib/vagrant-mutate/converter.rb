@@ -1,3 +1,5 @@
+require 'fileutils'
+
 module VagrantMutate
   class Converter
 
@@ -26,20 +28,45 @@ module VagrantMutate
           f.write( JSON.generate(metadata) )
         end
       rescue => e
-        raise Errors::MetadataWriteError, :error_message => e.message
+        raise Errors::WriteMetadataFailed, :error_message => e.message
       end
       @logger.info "Wrote metadata"
     end
 
     def write_disk(input_box, output_box)
+      if input_box.provider.image_format == output_box.provider.image_format
+        copy_disk(input_box, output_box)
+      else
+        convert_disk(input_box, output_box)
+      end
+    end
+
+    def copy_disk(input_box, output_box)
+        input = File.join( input_box.dir, input_box.provider.image_name )
+        output = File.join( output_box.dir, output_box.provider.image_name )
+        @logger.info "Copying #{input} to #{output}"
+        begin
+          FileUtils.copy_file(input, output)
+        rescue => e
+          raise Errors::WriteDiskFailed, :error_message => e.message
+        end
+    end
+
+    def convert_disk(input_box, output_box)
+        input = File.join( input_box.dir, input_box.provider.image_name )
+        output = File.join( output_box.dir, output_box.provider.image_name )
+        @logger.info "Converting #{input_box.provider.image_format} disk #{input} "\
+          "to #{output_box.provider.image_format} disk #{output}"
       begin
         # qemu-img invocation goes here
-      rescue
+      rescue => e
+          raise Errors::WriteDiskFailed, :error_message => e.message
       end
-      @logger.info "Would have converted #{input_box.name} from #{input_box.provider.name} to #{output_box.provider.name}"
     end
 
     def convert(input_box, output_box)
+      @env.ui.info "Converting #{input_box.name} from #{input_box.provider.name} "\
+        "to #{output_box.provider.name}. Please be patient..."
       write_metadata(output_box)
       write_disk(input_box, output_box)
     end

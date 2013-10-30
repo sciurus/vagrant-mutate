@@ -30,8 +30,12 @@ module VagrantMutate
       error_key(:create_box_dir_failed)
     end
 
-    class MetadataWriteError < VagrantMutateError
-      error_key(:metadata_write_error)
+    class WriteMetadataFailed < VagrantMutateError
+      error_key(:write_metadata_failed)
+    end
+
+    class WriteDiskFailed < VagrantMutateError
+      error_key(:write_disk_failed)
     end
 
   end

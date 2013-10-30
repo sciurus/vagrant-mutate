@@ -19,7 +19,11 @@ en:
         Creating directory for box failed with error:
         
         %{error_message}
-      metadata_write_error: |-
+      write_metadate_failed: |-
         Writing metadata for box failed with error:
         
+        %{error_message}
+      write_disk_failed: |-
+        Writing disk image for box failed with error:
+
         %{error_message}

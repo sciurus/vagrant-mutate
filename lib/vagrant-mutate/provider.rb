@@ -15,7 +15,7 @@ module VagrantMutate
           'virtualbox' => {
             'supported_input'  => true,
             'supported_output' => false,
-            'image_format'     => 'qcow2',
+            'image_format'     => 'vmdk',
             'image_name'       => 'box-disk1.vmdk'
           }
         }
