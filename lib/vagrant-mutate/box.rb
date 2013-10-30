@@ -15,12 +15,16 @@ module VagrantMutate
       @logger = Log4r::Logger.new('vagrant::mutate')
     end
 
-    def prepare_for_output( name, provider )
-      @logger.info "Preparing #{name} for output as #{provider}"
-      @name = name
-      @provider = provider
+    def prepare_for_output( box_name, provider_name )
+      @logger.info "Preparing #{box_name} for output as #{provider_name}"
+      @name = box_name
+      @provider = VagrantMutate::Provider.new( provider_name )
       @dir = create_output_dir()
       @dir_is_tmp = false
+
+      unless @provider.supported_output
+        raise Errors::ProviderNotSupported, :provider => provider_name
+      end
     end
 
     def load_from_file(file)
@@ -29,13 +33,17 @@ module VagrantMutate
       @dir = unpack(file)
       @dir_is_tmp = true
       @provider = determine_provider()
+
+      unless @provider.supported_input
+        raise Errors::ProviderNotSupported, :provider => provider_name
+      end
     end
 
     def load_by_name(name)
       @logger.info "Loading box from name #{name}"
       @name = name
       # cheat for now since only supported input is virtualbox
-      @provider = 'virtualbox'
+      @provider = VagrantMutate::Provider.new('virtualbox')
       @dir = find_input_dir()
       @dir_is_tmp = false
     end
@@ -54,7 +62,7 @@ module VagrantMutate
         raise Errors::DetermineProviderFailed, :error_message => e.message
       end
       @logger.info "Determined provider is #{metadata['provider']}"
-      return metadata['provider']
+      return VagrantMutate::Provider.new( metadata['provider'] )
     end
 
     def find_input_dir
@@ -69,7 +77,7 @@ module VagrantMutate
 
     def create_output_dir
       # e.g. $HOME/.vagrant.d/boxes/fedora-19/libvirt
-      out_dir = File.join( @env.boxes_path, @name, @provider )
+      out_dir = File.join( @env.boxes_path, @name, @provider.name )
       begin
         FileUtils.mkdir_p(out_dir)
       rescue => e

@@ -1,5 +1,4 @@
 module VagrantMutate
-
   class Converter
 
     # http://stackoverflow.com/questions/2108727/which-in-ruby-checking-if-program-exists-in-path-from-ruby
@@ -21,7 +20,7 @@ module VagrantMutate
     end
 
     def write_metadata(output_box)
-      metadata = { 'provider' => output_box.provider }
+      metadata = { 'provider' => output_box.provider.name }
       begin
         File.open( File.join( output_box.dir, 'metadata.json'), 'w') do |f|
           f.write( JSON.generate(metadata) )
@@ -37,7 +36,7 @@ module VagrantMutate
         # qemu-img invocation goes here
       rescue
       end
-      @logger.info "Would have wrote disk"
+      @logger.info "Would have converted #{input_box.name} from #{input_box.provider.name} to #{output_box.provider.name}"
     end
 
     def convert(input_box, output_box)

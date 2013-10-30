@@ -3,14 +3,6 @@ require 'vagrant-mutate/errors'
 
 module VagrantMutate
 
-  SUPPORTED_INPUT_PROVIDERS = [
-    'virtualbox'
-  ]
-
-  SUPPORTED_OUTPUT_PROVIDERS = [
-    'libvirt'
-  ]
-
   class Plugin < Vagrant.plugin('2')
     name 'vagrant-mutate'
 

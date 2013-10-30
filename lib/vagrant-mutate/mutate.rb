@@ -1,5 +1,6 @@
 require 'vagrant-mutate/box'
 require 'vagrant-mutate/converter'
+require 'vagrant-mutate/provider'
 
 module VagrantMutate
 
@@ -18,14 +19,11 @@ module VagrantMutate
       end
 
       box_arg = argv[0]
-      output_provider = argv[1]
-
-      unless SUPPORTED_OUTPUT_PROVIDERS.include? output_provider
-        raise Errors::ProviderNotSupported, :provider => output_provider
-      end
+      output_provider_arg = argv[1]
 
       c = Converter.new(@env)
       input_box = Box.new(@env)
+      output_box = Box.new(@env)
 
       if box_arg =~ /\.box$/
         input_box.load_from_file(box_arg)
@@ -33,13 +31,7 @@ module VagrantMutate
         input_box.load_by_name(box_arg)
       end
 
-      input_provider = input_box.provider
-      unless SUPPORTED_INPUT_PROVIDERS.include? input_provider
-        raise Errors::ProviderNotSupported, :provider => input_provider
-      end
-
-      output_box = Box.new(@env)
-      output_box.prepare_for_output( input_box.name, output_provider)
+      output_box.prepare_for_output( input_box.name, output_provider_arg)
 
       c.convert(input_box, output_box)
 
