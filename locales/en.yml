@@ -3,7 +3,7 @@ en:
     errors:
       input_provider_not_supported: |-
         Vagrant-mutate does not support converting from %{provider}
-      output)provider_not_supported: |-
+      output_provider_not_supported: |-
         Vagrant-mutate does not support converting to %{provider}
       qemu_not_found: |-
         Qemu-img was not found in your path
