@@ -57,13 +57,19 @@ module VagrantMutate
     end
 
     def determine_provider
-      begin
-        metadata = JSON.load( File.new( File.join(@dir, 'metadata.json'), 'r') )
-      rescue => e
-        raise Errors::DetermineProviderFailed, :error_message => e.message
+      metadata_file = File.join(@dir, 'metadata.json')
+      if File.exists? metadata_file
+        begin
+          metadata = JSON.load( File.new( metadata_file, 'r') )
+        rescue => e
+          raise Errors::DetermineProviderFailed, :error_message => e.message
+        end
+        @logger.info "Determined input provider is #{metadata['provider']}"
+        return VagrantMutate::Provider.new( metadata['provider'] )
+      else
+        @logger.info "No metadata found, so assuming input provider is virtualbox"
+        return VagrantMutate::Provider.new('virtualbox')
       end
-      @logger.info "Determined provider is #{metadata['provider']}"
-      return VagrantMutate::Provider.new( metadata['provider'] )
     end
 
     def find_input_dir
