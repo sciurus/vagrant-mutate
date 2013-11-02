@@ -1,3 +1,5 @@
+# This will be split into multiple classes; see https://github.com/sciurus/vagrant-mutate/issues/7
+
 module VagrantMutate
   class Provider
 

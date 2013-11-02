@@ -1,5 +1,7 @@
 require 'fileutils'
 
+# This will be merged into providers; see https://github.com/sciurus/vagrant-mutate/issues/7
+
 module VagrantMutate
   class Converter
 
