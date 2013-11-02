@@ -6,8 +6,12 @@ module VagrantMutate
       error_namespace('vagrant_mutate.errors')
     end
 
-    class ProviderNotSupported < VagrantMutateError
-      error_key(:provider_not_supported)
+    class InputProviderNotSupported < VagrantMutateError
+      error_key(:input_provider_not_supported)
+    end
+
+    class OutputProviderNotSupported < VagrantMutateError
+      error_key(:output_provider_not_supported)
     end
 
     class QemuNotFound < VagrantMutateError

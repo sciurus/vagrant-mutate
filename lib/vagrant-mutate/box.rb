@@ -23,7 +23,7 @@ module VagrantMutate
       @dir_is_tmp = false
 
       unless @provider.supported_output
-        raise Errors::ProviderNotSupported, :provider => provider_name
+        raise Errors::OutputProviderNotSupported, :provider => provider_name
       end
     end
 
@@ -35,7 +35,7 @@ module VagrantMutate
       @provider = determine_provider()
 
       unless @provider.supported_input
-        raise Errors::ProviderNotSupported, :provider => provider_name
+        raise Errors::InputProviderNotSupported, :provider => provider_name
       end
     end
 
