@@ -33,6 +33,19 @@ module VagrantMutate
       @logger.info "Wrote metadata"
     end
 
+    def write_vagrantfile(input_box, output_box)
+      input = File.join( input_box.dir, 'Vagrantfile' )
+      if File.exists? input
+        output = File.join( output_box.dir, 'Vagrantfile' )
+        @logger.info "Copying #{input} to #{output}"
+        begin
+          FileUtils.copy_file(input, output)
+        rescue => e
+          raise Errors::WriteVagrantfileFailed, :error_message => e.message
+        end
+      end
+    end
+
     def write_disk(input_box, output_box)
       if input_box.provider.image_format == output_box.provider.image_format
         copy_disk(input_box, output_box)
@@ -70,6 +83,7 @@ module VagrantMutate
       @env.ui.info "Converting #{input_box.name} from #{input_box.provider.name} "\
         "to #{output_box.provider.name}."
       write_metadata(output_box)
+      write_vagrantfile(input_box, output_box)
       write_disk(input_box, output_box)
     end
 

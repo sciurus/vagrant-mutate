@@ -34,6 +34,10 @@ module VagrantMutate
       error_key(:write_metadata_failed)
     end
 
+    class WriteVagrantfileFailed < VagrantMutateError
+      error_key(:write_vagrantfile_failed)
+    end
+
     class WriteDiskFailed < VagrantMutateError
       error_key(:write_disk_failed)
     end

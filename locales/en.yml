@@ -23,6 +23,10 @@ en:
         Writing metadata for box failed with error:
         
         %{error_message}
+      write_vagrantfile_failed: |-
+        Writing vagrantfile for box failed with error:
+
+        %{error_message}
       write_disk_failed: |-
         Writing disk image for box failed with error:
 
