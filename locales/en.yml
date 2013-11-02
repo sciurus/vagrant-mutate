@@ -27,3 +27,5 @@ en:
       write_disk_failed: |-
         Writing disk image for box failed with error:
         %{error_message}
+      parse_qemu_version_failed: |-
+        Determining the version of qemu-img installed failed.

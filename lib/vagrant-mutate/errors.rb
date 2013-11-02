@@ -46,5 +46,9 @@ module VagrantMutate
       error_key(:write_disk_failed)
     end
 
+    class ParseQemuVersionFailed < VagrantMutateError
+      error_key(:parse_qemu_version_failed)
+    end
+
   end
 end

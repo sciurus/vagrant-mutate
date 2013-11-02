@@ -7,6 +7,11 @@ module VagrantMutate
     def initialize(env)
       @env = env
       @logger = Log4r::Logger.new('vagrant::mutate')
+      verify_qemu_installed
+      verify_qemu_version
+    end
+
+    def verify_qemu_installed
       exts = ENV['PATHEXT'] ? ENV['PATHEXT'].split(';') : ['']
       ENV['PATH'].split(File::PATH_SEPARATOR).each do |path|
         exts.each do |ext|
@@ -19,6 +24,21 @@ module VagrantMutate
       end
       # if we make it here qemu-img command was not found
       raise Errors::QemuNotFound
+    end
+
+    def verify_qemu_version
+      usage = `qemu-img`
+      if usage =~ /(\d+\.\d+\.\d+)/
+        recommended_version = Gem::Version.new('1.2.0')
+        installed_version = Gem::Version.new($1)
+        if installed_version < recommended_version
+          @env.ui.warn "You have qemu #{installed_version} installed. "\
+            "This version is too old to read some virtualbox boxes. "\
+            "If conversion fails, try upgrading to qemu 1.2.0 or newer."
+        end
+      else
+        raise Errors::ParseQemuVersionFailed
+      end
     end
 
     def write_metadata(output_box)
