@@ -6,30 +6,24 @@ en:
       output)provider_not_supported: |-
         Vagrant-mutate does not support converting to %{provider}
       qemu_not_found: |-
-        qemu-img was not found in your path
+        Qemu-img was not found in your path
       box_not_found: |-
         The box at %{box} was not found
       extract_box_failed: |-
         Extracting box failed with error:
-        
         %{error_message}
       determine_provider_failed: |-
         Determining provider for box failed with error:
-        
         %{error_message}
       create_box_dir_failed: |-
         Creating directory for box failed with error:
-        
         %{error_message}
       write_metadata_failed: |-
         Writing metadata for box failed with error:
-        
         %{error_message}
       write_vagrantfile_failed: |-
         Writing vagrantfile for box failed with error:
-
         %{error_message}
       write_disk_failed: |-
         Writing disk image for box failed with error:
-
         %{error_message}
