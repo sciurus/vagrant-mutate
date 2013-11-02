@@ -43,8 +43,25 @@ module VagrantMutate
       end
     end
 
-    def write_metadata(output_box)
-      metadata = { 'provider' => output_box.provider.name }
+    def determine_virtual_size(input_box)
+      input_file = File.join( input_box.dir, input_box.provider.image_name )
+      info = `qemu-img info #{input_file}`
+      @logger.info "qemu-img info output\n#{info}"
+      if info =~ /(\d+) bytes/
+        size_in_gb = $1.to_i / (1024 * 1024 * 1024)
+        return "#{size_in_gb}G"
+      else
+        raise Errors::DetermineImageSizeFailed
+      end
+    end
+
+    # This has some libvirt specific functionality at the moment
+    def write_metadata(input_box, output_box)
+      metadata = {
+        'provider' => output_box.provider.name,
+        'format'   => 'qcow2',
+        'virtual_size' => determine_virtual_size(input_box)
+      }
       begin
         File.open( File.join( output_box.dir, 'metadata.json'), 'w') do |f|
           f.write( JSON.generate(metadata) )
@@ -104,7 +121,7 @@ module VagrantMutate
     def convert(input_box, output_box)
       @env.ui.info "Converting #{input_box.name} from #{input_box.provider.name} "\
         "to #{output_box.provider.name}."
-      write_metadata(output_box)
+      write_metadata(input_box, output_box)
       write_vagrantfile(input_box, output_box)
       write_disk(input_box, output_box)
     end

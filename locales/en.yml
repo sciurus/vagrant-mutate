@@ -28,4 +28,6 @@ en:
         Writing disk image for box failed with error:
         %{error_message}
       parse_qemu_version_failed: |-
-        Determining the version of qemu-img installed failed.
+        Determining the version of qemu-img installed failed
+      determine_image_size_failed: |-
+        Determining the virtual size of the disk image failed
