@@ -6,7 +6,7 @@ Vagrant-mutate is a [vagrant](http://www.vagrantup.com/) plugin to convert vagra
 
 ### qemu-img
 
-First, you must install [qemu-img](http://wiki.qemu.org/Main_Page).
+First, you must install [qemu-img](http://wiki.qemu.org/Main_Page). Support for the disk image format most commonly used in vagrant boxes for virtualbox was added in [version 1.2.0](http://wiki.qemu.org/ChangeLog/1.2#VMDK); if you have an older version vagrant-mutate will warn you and most likely won't work.
 
 #### Debian and derivatives
 
