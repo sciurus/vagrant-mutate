@@ -49,7 +49,7 @@ module VagrantMutate
       @logger.info "qemu-img info output\n#{info}"
       if info =~ /(\d+) bytes/
         size_in_gb = $1.to_i / (1024 * 1024 * 1024)
-        return "#{size_in_gb}G"
+        return size_in_gb
       else
         raise Errors::DetermineImageSizeFailed
       end
