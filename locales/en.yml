@@ -1,10 +1,8 @@
 en:
   vagrant_mutate:
     errors:
-      input_provider_not_supported: |-
-        Vagrant-mutate does not support converting from %{provider}
-      output_provider_not_supported: |-
-        Vagrant-mutate does not support converting to %{provider}
+      provider_not_supported: |-
+        Vagrant-mutate does not support %{provider} for %{direction}
       qemu_not_found: |-
         Qemu-img was not found in your path
       box_not_found: |-

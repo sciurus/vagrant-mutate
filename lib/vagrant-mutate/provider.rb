@@ -11,7 +11,7 @@ module VagrantMutate
         when 'virtualbox'
           Virtualbox.new
         else
-          raise Errors::ProviderNotSupported, :provider => name
+          raise Errors::ProviderNotSupported, :provider => name, :direction => 'input or output'
         end
       end
 
