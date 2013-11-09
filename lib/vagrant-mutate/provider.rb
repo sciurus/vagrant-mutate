@@ -1,36 +1,40 @@
-# This will be split into multiple classes; see https://github.com/sciurus/vagrant-mutate/issues/7
-
 module VagrantMutate
-  class Provider
+  module Provider
 
-    attr_reader :name, :supported_input, :supported_output, :image_format, :image_name
+    class Provider
+      attr_reader :name, :supported_input, :supported_output, :image_format, :image_name
 
-      def initialize(name)
-
-        providers = {
-          'libvirt' => {
-            'supported_input'  => true,
-            'supported_output' => true,
-            'image_format'     => 'qcow2',
-            'image_name'       => 'box.img'
-          },
-          'virtualbox' => {
-            'supported_input'  => true,
-            'supported_output' => false,
-            'image_format'     => 'vmdk',
-            'image_name'       => 'box-disk1.vmdk'
-          }
-        }
-
-        unless providers.has_key? name
+      def self.create(name)
+        case name
+        when 'libvirt'
+          Libvirt.new
+        when 'virtualbox'
+          Virtualbox.new
+        else
           raise Errors::ProviderNotSupported, :provider => name
         end
+      end
 
-        @name = name
-        @supported_input  = providers[name]['supported_input']
-        @supported_output = providers[name]['supported_output']
-        @image_format     = providers[name]['image_format']
-        @image_name       = providers[name]['image_name']
+    end
+
+    class Libvirt < Provider
+      def initialize
+          @name             = 'libvirt'
+          @supported_input  = true,
+          @supported_output = true,
+          @image_format     = 'qcow2',
+          @image_name       = 'box.img'
+      end
+    end
+
+    class Virtualbox < Provider
+      def initialize
+          @name             = 'virtualbox'
+          @supported_input  = true,
+          @supported_output = false,
+          @image_format     = 'vmdk',
+          @image_name       = 'box-disk1.vmdk'
+      end
     end
 
   end
