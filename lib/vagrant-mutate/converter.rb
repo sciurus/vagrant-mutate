@@ -48,8 +48,11 @@ module VagrantMutate
       info = `qemu-img info #{input_file}`
       @logger.info "qemu-img info output\n#{info}"
       if info =~ /(\d+) bytes/
-        size_in_gb = $1.to_i / (1024 * 1024 * 1024)
-        return size_in_gb
+        # vagrant-libvirt wants size in GB and as integer
+        size_in_bytes = $1.to_f
+        size_in_gb = size_in_bytes / (1024 * 1024 * 1024)
+        rounded_size_in_gb = size_in_gb.ceil
+        return rounded_size_in_gb
       else
         raise Errors::DetermineImageSizeFailed
       end
