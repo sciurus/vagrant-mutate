@@ -22,7 +22,7 @@ module VagrantMutate
         metadata = {
           'provider' => output_box.provider.name,
           'format'   => 'qcow2',
-          'virtual_size' => determine_virtual_size(input_box)
+          'virtual_size' => ( input_box.determine_virtual_size.to_f / (1024 * 1024 * 1024) ).ceil
         }
         begin
           File.open( File.join( output_box.dir, 'metadata.json'), 'w') do |f|
@@ -34,22 +34,6 @@ module VagrantMutate
         @logger.info "Wrote metadata"
       end
 
-      # move determining size in bytes from provider to box
-      # and just adjust to gb in write_metadata
-      def determine_virtual_size(input_box)
-        input_file = File.join( input_box.dir, input_box.provider.image_name )
-        info = `qemu-img info #{input_file}`
-        @logger.info "qemu-img info output\n#{info}"
-        if info =~ /(\d+) bytes/
-          # vagrant-libvirt wants size in GB and as integer
-          size_in_bytes = $1.to_f
-          size_in_gb = size_in_bytes / (1024 * 1024 * 1024)
-          rounded_size_in_gb = size_in_gb.ceil
-          return rounded_size_in_gb
-        else
-          raise Errors::DetermineImageSizeFailed
-        end
-      end
     end
   end
 end

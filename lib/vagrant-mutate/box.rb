@@ -115,5 +115,16 @@ module VagrantMutate
       return tmp_dir
     end
 
+    def determine_virtual_size
+      input_file = File.join( @dir, @provider.image_name )
+      info = `qemu-img info #{input_file}`
+      @logger.debug "qemu-img info output\n#{info}"
+      if info =~ /(\d+) bytes/
+        return $1
+      else
+        raise Errors::DetermineImageSizeFailed
+      end
+    end
+
   end
 end
