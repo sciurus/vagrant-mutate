@@ -1,6 +1,6 @@
 require 'vagrant-mutate/box'
 require 'vagrant-mutate/converter'
-require 'vagrant-mutate/provider'
+require 'vagrant-mutate/provider/provider'
 
 module VagrantMutate
 
@@ -31,6 +31,9 @@ module VagrantMutate
       end
 
       output_box.prepare_for_output( input_box.name, output_provider_arg)
+
+      @env.ui.info "Converting #{input_box.name} from #{input_box.provider.name} "\
+        "to #{output_box.provider.name}."
 
       output_box.provider.convert(input_box, output_box)
 
