@@ -26,12 +26,11 @@ Download and install it from [Stefan Weil](http://qemu.weilnetz.de/) or compile 
 
 ### vagrant-mutate
 
-Then you can install vagrant-mutate. Once it has proven stable I will publish it to RubyGems, but for now you must build it from source.
+Now you're ready to install vagrant-mutate. To install the latest released version simply run
 
-    git clone https://github.com/sciurus/vagrant-mutate.git
-    cd vagrant-mutate
-    rake build
-    vagrant plugin install pkg/*
+    vagrant plugin install vagrant-mutate
+
+To install from source, clone the repository and run `rake build`. That will produce a gem file in the _pkg_ directory which you can then install with `vagrant plugin install`.
 
 ## Usage
 
@@ -61,7 +60,7 @@ If you experience any problems, please open an issue on [github](https://github.
 
 ## Contributing
 
-Contributions are welcome! I'd especially like to see support for converting between more providers added. Be forewarned that I've made some assumptions in the code that may have to be reworked in order to support more than just virtualbox to libvirt.
+Contributions are welcome! I'd especially like to see support for converting between more providers added.
 
 To contribute, follow the standard flow of
 
