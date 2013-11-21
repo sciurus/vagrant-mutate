@@ -53,6 +53,25 @@ module VagrantMutate
         end
       end
 
+      def convert(input_box, output_box)
+        write_metadata(input_box, output_box)
+        # will have to rethink this if any providers need to alter the vagrantfile
+        copy_vagrantfile(input_box, output_box)
+        write_disk(input_box, output_box)
+      end
+
+      def write_metadata(input_box, output_box)
+        metadata = generate_metadata(input_box, output_box)
+        begin
+          File.open( File.join( output_box.dir, 'metadata.json'), 'w') do |f|
+            f.write( JSON.generate(metadata) )
+          end
+        rescue => e
+          raise Errors::WriteMetadataFailed, :error_message => e.message
+        end
+        @logger.info "Wrote metadata"
+      end
+
       def copy_vagrantfile(input_box, output_box)
         input = File.join( input_box.dir, 'Vagrantfile' )
         if File.exists? input
