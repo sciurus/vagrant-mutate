@@ -1,8 +1,7 @@
 module VagrantMutate
   module Provider
     class Libvirt < Provider
-      def initialize(env)
-          super
+      def initialize
           @name             = 'libvirt'
           @supported_input  = true,
           @supported_output = true,

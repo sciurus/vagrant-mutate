@@ -21,6 +21,7 @@ module VagrantMutate
       box_arg = argv[0]
       output_provider_arg = argv[1]
 
+      c = Converter.new(@env)
       input_box = Box.new(@env)
       output_box = Box.new(@env)
 
@@ -32,10 +33,7 @@ module VagrantMutate
 
       output_box.prepare_for_output( input_box.name, output_provider_arg)
 
-      @env.ui.info "Converting #{input_box.name} from #{input_box.provider.name} "\
-        "to #{output_box.provider.name}."
-
-      output_box.provider.convert(input_box, output_box)
+      c.convert(input_box, output_box)
 
       input_box.cleanup
 

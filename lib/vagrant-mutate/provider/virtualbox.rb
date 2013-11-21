@@ -2,8 +2,7 @@ module VagrantMutate
   module Provider
 
     class Virtualbox < Provider
-      def initialize(env)
-          super
+      def initialize
           @name             = 'virtualbox'
           @supported_input  = true,
           @supported_output = false,

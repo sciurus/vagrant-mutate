@@ -18,7 +18,7 @@ module VagrantMutate
     def prepare_for_output( box_name, provider_name )
       @logger.info "Preparing #{box_name} for output as #{provider_name}"
       @name = box_name
-      @provider = Provider::Provider.create( provider_name, @env )
+      @provider = Provider::Provider.create( provider_name )
       @dir = create_output_dir()
       @dir_is_tmp = false
 
@@ -43,7 +43,7 @@ module VagrantMutate
       @logger.info "Loading box from name #{name}"
       @name = name
       # cheat for now since only supported input is virtualbox
-      @provider = Provider::Provider.create('virtualbox', @env)
+      @provider = Provider::Provider.create('virtualbox')
       @dir = find_input_dir()
       @dir_is_tmp = false
     end
@@ -65,7 +65,7 @@ module VagrantMutate
           raise Errors::DetermineProviderFailed, :error_message => e.message
         end
         @logger.info "Determined input provider is #{metadata['provider']}"
-        return Provider::Provider.create( metadata['provider'], @env )
+        return Provider::Provider.create( metadata['provider'] )
       else
         @logger.info "No metadata found, so assuming input provider is virtualbox"
         return Provider::Provider.create('virtualbox')
