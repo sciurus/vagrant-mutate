@@ -41,6 +41,15 @@ module VagrantMutate
       end
     end
 
+    def convert(input_box, output_box)
+      @env.ui.info "Converting #{input_box.name} from #{input_box.provider.name} "\
+        "to #{output_box.provider.name}."
+      write_metadata(input_box, output_box)
+      # will have to rethink this if any providers need to alter the vagrantfile
+      copy_vagrantfile(input_box, output_box)
+      write_disk(input_box, output_box)
+    end
+
     def write_metadata(input_box, output_box)
       metadata = output_box.provider.generate_metadata(input_box, output_box)
       begin
@@ -96,15 +105,6 @@ module VagrantMutate
       unless system(command)
         raise Errors::WriteDiskFailed, :error_message => "qemu-img exited with status #{$?.exitstatus}"
       end
-    end
-
-    def convert(input_box, output_box)
-      @env.ui.info "Converting #{input_box.name} from #{input_box.provider.name} "\
-        "to #{output_box.provider.name}."
-      write_metadata(input_box, output_box)
-      # will have to rethink this if any providers need to alter the vagrantfile
-      copy_vagrantfile(input_box, output_box)
-      write_disk(input_box, output_box)
     end
 
   end
