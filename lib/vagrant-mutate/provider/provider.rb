@@ -5,6 +5,9 @@ module VagrantMutate
 
       def self.create(name)
         case name
+        when 'kvm'
+          require_relative 'kvm'
+          Kvm.new
         when 'libvirt'
           require_relative 'libvirt'
           Libvirt.new
