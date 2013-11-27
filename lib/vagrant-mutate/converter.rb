@@ -47,6 +47,7 @@ module VagrantMutate
       write_metadata(input_box, output_box)
       # will have to rethink this if any providers need to alter the vagrantfile
       copy_vagrantfile(input_box, output_box)
+      write_provider_specific_files(input_box, output_box)
       write_disk(input_box, output_box)
     end
 
@@ -72,6 +73,14 @@ module VagrantMutate
         rescue => e
           raise Errors::WriteVagrantfileFailed, :error_message => e.message
         end
+      end
+    end
+
+    def write_provider_specific_files(input_box, output_box)
+      if output_box.provider.respond_to? 'write_specific_files'
+        output_box.provider.write_specific_files(input_box, output_box)
+      else
+        @logger.info "No provider-specific files for #{output_box.provider.name}"
       end
     end
 
