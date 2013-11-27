@@ -3,7 +3,7 @@ module VagrantMutate
     class Libvirt < Provider
       def initialize
           @name             = 'libvirt'
-          @supported_input  = true,
+          @supported_input  = false,
           @supported_output = true,
           @image_format     = 'qcow2',
           @image_name       = 'box.img'
