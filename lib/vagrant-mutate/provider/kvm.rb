@@ -21,23 +21,38 @@ module VagrantMutate
         template_path = VagrantMutate.source_root.join('templates', 'kvm', 'box.xml.erb')
         template = File.read(template_path)
 
-        # for testing just arbitrarily setting these values
+        # needing this is a hack that shows my class hierachy is wrong
+        input_box.provider.parse_ovf(input_box)
+
         uuid = nil
-        gui = nil
-        name = 'precise32'
-        memory = 393216
-        cpus = 1
-        arch = 'i686'
-        qemu_bin = '/usr/bin/qemu-kvm'
+        gui = true
+        disk_bus = 'virtio'
+        name = input_box.name
         image_type = @image_format
         disk = @image_name
-        disk_bus = 'virtio'
-        mac = '08:00:27:12:96:98'
+        qemu_bin = get_kvm_path
+        memory = input_box.provider.get_memory / 1024 # convert bytes to kib
+        cpus = input_box.provider.get_cpus
+        mac = input_box.provider.get_mac_address
+        arch = input_box.provider.get_arch
 
         File.open( File.join( output_box.dir, 'box.xml'), 'w') do |f|
           f.write( ERB.new(template).result(binding) )
         end
       end
+
+      def get_kvm_path
+        qemu_bin_list = [ '/usr/bin/qemu-kvm', '/usr/bin/kvm',
+                          '/usr/bin/qemu-system-x86_64',
+                          '/usr/bin/qemu-system-i386' ]
+        qemu_bin = qemu_bin_list.detect { |binary| File.exists? binary }
+        unless qemu_bin
+          raise Errors::QemuNotFound
+        end
+        return qemu_bin
+      end
+
+      private :get_kvm_path
 
     end
   end
