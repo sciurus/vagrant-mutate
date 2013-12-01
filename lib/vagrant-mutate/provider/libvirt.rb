@@ -18,6 +18,10 @@ module VagrantMutate
         }
       end
 
+      def write_specific_files(input_box)
+        # nothing to do here
+      end
+
     end
   end
 end
