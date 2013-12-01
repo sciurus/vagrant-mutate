@@ -52,7 +52,7 @@ module VagrantMutate
     end
 
     def write_metadata(input_box, output_box)
-      metadata = output_box.provider.generate_metadata(input_box, output_box)
+      metadata = output_box.provider.generate_metadata(input_box)
       begin
         File.open( File.join( output_box.dir, 'metadata.json'), 'w') do |f|
           f.write( JSON.generate(metadata) )
@@ -78,7 +78,7 @@ module VagrantMutate
 
     def write_provider_specific_files(input_box, output_box)
       if output_box.provider.respond_to? 'write_specific_files'
-        output_box.provider.write_specific_files(input_box, output_box)
+        output_box.provider.write_specific_files(input_box)
       else
         @logger.info "No provider-specific files for #{output_box.provider.name}"
       end

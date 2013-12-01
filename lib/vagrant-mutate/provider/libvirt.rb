@@ -10,9 +10,9 @@ module VagrantMutate
           @image_name       = 'box.img'
       end
 
-      def generate_metadata(input_box, output_box)
+      def generate_metadata(input_box)
         metadata = {
-          'provider' => output_box.provider.name,
+          'provider' => @box.provider.name,
           'format'   => 'qcow2',
           'virtual_size' => ( input_box.determine_virtual_size.to_f / (1024 * 1024 * 1024) ).ceil
         }

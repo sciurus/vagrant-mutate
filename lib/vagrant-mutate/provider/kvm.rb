@@ -12,13 +12,13 @@ module VagrantMutate
           @image_name       = 'box-disk1.img'
       end
 
-      def generate_metadata(input_box, output_box)
+      def generate_metadata(input_box)
         metadata = {
-          'provider' => output_box.provider.name,
+          'provider' => @box.provider.name,
         }
       end
 
-      def write_specific_files(input_box, output_box)
+      def write_specific_files(input_box)
         template_path = VagrantMutate.source_root.join('templates', 'kvm', 'box.xml.erb')
         template = File.read(template_path)
 
@@ -34,7 +34,7 @@ module VagrantMutate
         mac = input_box.provider.get_mac_address
         arch = input_box.provider.get_arch
 
-        File.open( File.join( output_box.dir, 'box.xml'), 'w') do |f|
+        File.open( File.join( @box.dir, 'box.xml'), 'w') do |f|
           f.write( ERB.new(template).result(binding) )
         end
       end
