@@ -42,19 +42,23 @@ module VagrantMutate
     end
 
     def convert(input_box, output_box)
+      @input_box  = input_box
+      @output_box = output_box
+
       @env.ui.info "Converting #{input_box.name} from #{input_box.provider.name} "\
         "to #{output_box.provider.name}."
-      write_metadata(input_box, output_box)
+
+      write_metadata
       # will have to rethink this if any providers need to alter the vagrantfile
-      copy_vagrantfile(input_box, output_box)
+      copy_vagrantfile
       output_box.provider.write_specific_files(input_box)
-      write_disk(input_box, output_box)
+      write_disk
     end
 
-    def write_metadata(input_box, output_box)
-      metadata = output_box.provider.generate_metadata(input_box)
+    def write_metadata
+      metadata = @output_box.provider.generate_metadata(@input_box)
       begin
-        File.open( File.join( output_box.dir, 'metadata.json'), 'w') do |f|
+        File.open( File.join( @output_box.dir, 'metadata.json'), 'w') do |f|
           f.write( JSON.generate(metadata) )
         end
       rescue => e
@@ -63,10 +67,10 @@ module VagrantMutate
       @logger.info "Wrote metadata"
     end
 
-    def copy_vagrantfile(input_box, output_box)
-      input = File.join( input_box.dir, 'Vagrantfile' )
+    def copy_vagrantfile
+      input = File.join( @input_box.dir, 'Vagrantfile' )
       if File.exists? input
-        output = File.join( output_box.dir, 'Vagrantfile' )
+        output = File.join( @output_box.dir, 'Vagrantfile' )
         @logger.info "Copying #{input} to #{output}"
         begin
           FileUtils.copy_file(input, output)
@@ -76,17 +80,17 @@ module VagrantMutate
       end
     end
 
-    def write_disk(input_box, output_box)
-      if input_box.provider.image_format == output_box.provider.image_format
-        copy_disk(input_box, output_box)
+    def write_disk
+      if @input_box.provider.image_format == @output_box.provider.image_format
+        copy_disk
       else
-        convert_disk(input_box, output_box)
+        convert_disk
       end
     end
 
-    def copy_disk(input_box, output_box)
-      input = File.join( input_box.dir, input_box.provider.image_name )
-      output = File.join( output_box.dir, output_box.provider.image_name )
+    def copy_disk
+      input = File.join( @input_box.dir, @input_box.provider.image_name )
+      output = File.join( @output_box.dir, @output_box.provider.image_name )
       @logger.info "Copying #{input} to #{output}"
       begin
         FileUtils.copy_file(input, output)
@@ -95,11 +99,11 @@ module VagrantMutate
       end
     end
 
-    def convert_disk(input_box, output_box)
-      input_file    = File.join( input_box.dir, input_box.provider.image_name )
-      output_file   = File.join( output_box.dir, output_box.provider.image_name )
-      input_format  = input_box.provider.image_format
-      output_format = output_box.provider.image_format
+    def convert_disk
+      input_file    = File.join( @input_box.dir, @input_box.provider.image_name )
+      output_file   = File.join( @output_box.dir, @output_box.provider.image_name )
+      input_format  = @input_box.provider.image_format
+      output_format = @output_box.provider.image_format
 
       command = "qemu-img convert -p -f #{input_format} -O #{output_format} #{input_file} #{output_file}"
       @logger.info "Running #{command}"
