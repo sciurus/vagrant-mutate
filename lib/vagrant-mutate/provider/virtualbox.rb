@@ -22,12 +22,12 @@ module VagrantMutate
       # but if that is not set correctly we risk a 64-bit box not booting
       # because we try to run in 32-bit vm.
       # in contrast, running 32-bit box in a 64-bit vm should work.
-      def get_arch
+      def architecture
         return 'x86_64'
       end
 
       # use mac from the first enabled nic
-      def get_mac_address
+      def mac_address
         @ovf.elements.each("//vbox:Machine/Hardware//Adapter") do |ele|
           if ele.attributes['enabled'] == 'true'
             mac = ele.attributes['MACAddress']
@@ -39,7 +39,7 @@ module VagrantMutate
         end
       end
 
-      def get_cpus
+      def cpus
         @ovf.elements.each("//VirtualHardwareSection/Item") do |device|
           if device.elements["rasd:ResourceType"].text == '3'
             return device.elements["rasd:VirtualQuantity"].text
@@ -47,7 +47,7 @@ module VagrantMutate
         end
       end
 
-      def get_memory
+      def memory
         @ovf.elements.each("//VirtualHardwareSection/Item") do |device|
           if device.elements["rasd:ResourceType"].text == '4'
             return size_in_bytes(device.elements["rasd:VirtualQuantity"].text,

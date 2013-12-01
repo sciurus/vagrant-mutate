@@ -14,7 +14,7 @@ module VagrantMutate
         metadata = {
           'provider' => @box.provider.name,
           'format'   => 'qcow2',
-          'virtual_size' => ( input_box.determine_virtual_size.to_f / (1024 * 1024 * 1024) ).ceil
+          'virtual_size' => ( input_box.virtual_size.to_f / (1024 * 1024 * 1024) ).ceil
         }
       end
 

@@ -28,11 +28,11 @@ module VagrantMutate
         name = input_box.name
         image_type = @image_format
         disk = @image_name
-        qemu_bin = get_kvm_path
-        memory = input_box.provider.get_memory / 1024 # convert bytes to kib
-        cpus = input_box.provider.get_cpus
-        mac = input_box.provider.get_mac_address
-        arch = input_box.provider.get_arch
+        qemu_bin = find_kvm
+        memory = input_box.provider.memory / 1024 # convert bytes to kib
+        cpus = input_box.provider.cpus
+        mac = input_box.provider.mac_address
+        arch = input_box.provider.architecture
 
         File.open( File.join( @box.dir, 'box.xml'), 'w') do |f|
           f.write( ERB.new(template).result(binding) )
@@ -41,7 +41,7 @@ module VagrantMutate
 
       private
 
-      def get_kvm_path
+      def find_kvm
         qemu_bin_list = [ '/usr/bin/qemu-kvm', '/usr/bin/kvm',
                           '/usr/bin/qemu-system-x86_64',
                           '/usr/bin/qemu-system-i386' ]
