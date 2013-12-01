@@ -39,6 +39,8 @@ module VagrantMutate
         end
       end
 
+      private
+
       def get_kvm_path
         qemu_bin_list = [ '/usr/bin/qemu-kvm', '/usr/bin/kvm',
                           '/usr/bin/qemu-system-x86_64',
@@ -49,8 +51,6 @@ module VagrantMutate
         end
         return qemu_bin
       end
-
-      private :get_kvm_path
 
     end
   end

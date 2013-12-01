@@ -56,6 +56,8 @@ module VagrantMutate
         end
       end
 
+      private
+
       # Takes a quantity and a unit
       # returns quantity in bytes
       # mib = true to use mebibytes, etc
@@ -92,8 +94,6 @@ module VagrantMutate
           raise ArgumentError, "Unknown unit #{unit}"
         end
       end
-
-      private :size_in_bytes
 
     end
 

@@ -10,6 +10,22 @@ module VagrantMutate
       verify_qemu_version
     end
 
+    def convert(input_box, output_box)
+      @input_box  = input_box
+      @output_box = output_box
+
+      @env.ui.info "Converting #{input_box.name} from #{input_box.provider.name} "\
+        "to #{output_box.provider.name}."
+
+      write_metadata
+      # will have to rethink this if any providers need to alter the vagrantfile
+      copy_vagrantfile
+      output_box.provider.write_specific_files(input_box)
+      write_disk
+    end
+
+    private
+
     # http://stackoverflow.com/questions/2108727/which-in-ruby-checking-if-program-exists-in-path-from-ruby
     def verify_qemu_installed
       exts = ENV['PATHEXT'] ? ENV['PATHEXT'].split(';') : ['']
@@ -41,19 +57,6 @@ module VagrantMutate
       end
     end
 
-    def convert(input_box, output_box)
-      @input_box  = input_box
-      @output_box = output_box
-
-      @env.ui.info "Converting #{input_box.name} from #{input_box.provider.name} "\
-        "to #{output_box.provider.name}."
-
-      write_metadata
-      # will have to rethink this if any providers need to alter the vagrantfile
-      copy_vagrantfile
-      output_box.provider.write_specific_files(input_box)
-      write_disk
-    end
 
     def write_metadata
       metadata = @output_box.provider.generate_metadata(@input_box)
