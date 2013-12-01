@@ -4,20 +4,16 @@ module VagrantMutate
   module Provider
 
     class Virtualbox < Provider
-      def initialize
+      def initialize(box)
+          @box              = box
           @name             = 'virtualbox'
           @supported_input  = true,
           @supported_output = false,
           @image_format     = 'vmdk',
           @image_name       = 'box-disk1.vmdk'
-      end
 
-      def parse_ovf(input_box)
-        unless @ovf
-          definition = File.read( File.join( input_box.dir, 'box.ovf') )
+          definition = File.read( File.join( box.dir, 'box.ovf') )
           @ovf = REXML::Document.new(definition)
-        end
-        @ovf
       end
 
       # the architecture is not defined in the ovf file,

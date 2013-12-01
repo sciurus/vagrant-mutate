@@ -3,7 +3,8 @@ require 'erb'
 module VagrantMutate
   module Provider
     class Kvm < Provider
-      def initialize
+      def initialize(box)
+          @box              = box
           @name             = 'kvm'
           @supported_input  = false,
           @supported_output = true,
@@ -20,9 +21,6 @@ module VagrantMutate
       def write_specific_files(input_box, output_box)
         template_path = VagrantMutate.source_root.join('templates', 'kvm', 'box.xml.erb')
         template = File.read(template_path)
-
-        # needing this is a hack that shows my class hierachy is wrong
-        input_box.provider.parse_ovf(input_box)
 
         uuid = nil
         gui = true

@@ -3,17 +3,17 @@ module VagrantMutate
     class Provider
       attr_reader :name, :supported_input, :supported_output, :image_format, :image_name
 
-      def self.create(name)
+      def self.create(name, box)
         case name
         when 'kvm'
           require_relative 'kvm'
-          Kvm.new
+          Kvm.new(box)
         when 'libvirt'
           require_relative 'libvirt'
-          Libvirt.new
+          Libvirt.new(box)
         when 'virtualbox'
           require_relative 'virtualbox'
-          Virtualbox.new
+          Virtualbox.new(box)
         else
           raise Errors::ProviderNotSupported, :provider => name, :direction => 'input or output'
         end

@@ -1,7 +1,8 @@
 module VagrantMutate
   module Provider
     class Libvirt < Provider
-      def initialize
+      def initialize(box)
+          @box              = box
           @name             = 'libvirt'
           @supported_input  = false,
           @supported_output = true,
