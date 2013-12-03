@@ -1,3 +1,8 @@
+# 0.1.3 (2013-12-03)
+
+* Add support for vagrant-kvm (#12)
+* Add acceptance tests
+
 # 0.1.2 (2013-11-20)
 
 * Rework provider and converter implementation (#7)

@@ -1,6 +1,11 @@
 # Vagrant-Mutate
 
-Vagrant-mutate is a [vagrant](http://www.vagrantup.com/) plugin to convert vagrant boxes to work with different providers. Currently the only supported conversion is from virtualbox to [libvirt](https://github.com/pradels/vagrant-libvirt).
+Vagrant-mutate is a [vagrant](http://www.vagrantup.com/) plugin to convert vagrant boxes to work with different providers.
+
+## Supported Conversions
+
+* Virtualbox to [kvm](https://github.com/adrahon/vagrant-kvm) (tested against 0.1.4)
+* Virtualbox to [libvirt](https://github.com/pradels/vagrant-libvirt) (tested against 0.0.11)
 
 ## Installation
 
@@ -65,9 +70,10 @@ Contributions are welcome! I'd especially like to see support for converting bet
 To contribute, follow the standard flow of
 
 1. Fork it
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+1. Create your feature branch (`git checkout -b my-new-feature`)
+1. Commit your changes (`git commit -am 'Add some feature'`)
+1. Make sure the acceptance tests pass (`ruby test/test.rb`)
+1. Push to the branch (`git push origin my-new-feature`)
+1. Create new Pull Request
 
 Even if you can't contribute code, if you have an idea for an improvement please open an [issue](https://github.com/sciurus/vagrant-mutate/issues).
