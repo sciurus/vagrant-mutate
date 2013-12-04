@@ -1,6 +1,5 @@
-require 'vagrant-mutate/box'
-require 'vagrant-mutate/converter'
-require 'vagrant-mutate/provider/provider'
+require 'vagrant-mutate/box_loader'
+require 'vagrant-mutate/converter/converter'
 
 module VagrantMutate
 
@@ -21,23 +20,23 @@ module VagrantMutate
       box_arg = argv[0]
       output_provider_arg = argv[1]
 
-      converter  = Converter.new(@env)
-      input_box  = Box.new(@env)
-      output_box = Box.new(@env)
+      input_loader  = BoxLoader.new(@env)
+      output_loader = BoxLoader.new(@env)
 
       if box_arg =~ /\.box$/
-        input_box.load_from_file(box_arg)
+        input_box = input_loader.load_from_file(box_arg)
       else
-        input_box.load_by_name(box_arg)
+        input_box = input_loader.load_by_name(box_arg)
       end
 
-      output_box.prepare_for_output( input_box.name, output_provider_arg)
+      output_box = output_loader.prepare_for_output( input_box.name, output_provider_arg)
 
-      converter.convert(input_box, output_box)
+      converter  = Converter::Converter.create(@env, input_box, output_box)
+      converter.convert
 
-      input_box.cleanup
+      input_loader.cleanup
 
-      @env.ui.info "The box #{output_box.name} (#{output_box.provider.name}) is now ready to use."
+      @env.ui.info "The box #{output_box.name} (#{output_box.provider_name}) is now ready to use."
 
     end
 

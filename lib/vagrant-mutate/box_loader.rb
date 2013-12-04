@@ -4,73 +4,80 @@ require 'json'
 require 'zlib'
 
 module VagrantMutate
-  class Box
+  class BoxLoader
 
     include Archive::Tar
-
-    attr_reader :dir, :name, :provider
 
     def initialize( env )
       @env = env
       @logger = Log4r::Logger.new('vagrant::mutate')
+      @tmp_dir = nil
     end
 
-    def prepare_for_output( box_name, provider_name )
-      @logger.info "Preparing #{box_name} for output as #{provider_name}"
-      @name = box_name
-      @provider = Provider::Provider.create( provider_name, self )
-      @dir = create_output_dir()
-      @dir_is_tmp = false
+    def create_box(provider_name, name, dir)
+        @logger.info "Creating box #{name} with provider #{provider_name} in #{dir}"
+        case provider_name
+        when 'kvm'
+          require_relative 'box/kvm'
+          Box::Kvm.new(@env, name, dir)
+        when 'libvirt'
+          require_relative 'box/libvirt'
+          Box::Libvirt.new(@env, name, dir)
+        when 'virtualbox'
+          require_relative 'box/virtualbox'
+          Box::Virtualbox.new(@env, name, dir)
+        else
+          raise Errors::ProviderNotSupported, :provider => provider_name, :direction => 'input or output'
+        end
+    end
 
-      unless @provider.supported_output
+    def prepare_for_output(name, provider_name)
+      @logger.info "Preparing #{name} for output as #{provider_name}"
+      dir = create_output_dir(name, provider_name)
+      box = create_box(provider_name, name, dir)
+
+      unless box.supported_output
         raise Errors::ProviderNotSupported, :provider => provider_name, :direction => 'output'
       end
+
+      return box
     end
 
     def load_from_file(file)
       @logger.info "Loading box from file #{file}"
-      @name = File.basename( file, File.extname(file) )
-      @dir = unpack(file)
-      @dir_is_tmp = true
-      @provider = determine_provider()
+      name = File.basename( file, File.extname(file) )
+      dir = unpack(file)
+      @tmp_dir = dir
+      provider_name = determine_provider(dir)
+      box = create_box(provider_name, name, dir)
 
-      unless @provider.supported_input
+      unless box.supported_input
         raise Errors::ProviderNotSupported, :provider => provider_name, :direction => 'input'
       end
+
+      return box
     end
 
     def load_by_name(name)
       @logger.info "Loading box from name #{name}"
-      @name = name
+      dir = find_input_dir(name)
       # cheat for now since only supported input is virtualbox
-      @provider = Provider::Provider.create('virtualbox', self)
-      @dir = find_input_dir()
-      @dir_is_tmp = false
+      box = create_box('virtualbox', name, dir)
+      return box
     end
 
     def cleanup
-      if @dir_is_tmp
+      if @tmp_dir
         @env.ui.info "Cleaning up temporary files."
-        @logger.info "Deleting #{dir}"
-        FileUtils.remove_entry_secure(@dir)
-      end
-    end
-
-    def virtual_size
-      input_file = File.join( @dir, @provider.image_name )
-      info = `qemu-img info #{input_file}`
-      @logger.debug "qemu-img info output\n#{info}"
-      if info =~ /(\d+) bytes/
-        return $1
-      else
-        raise Errors::DetermineImageSizeFailed
+        @logger.info "Deleting #{@tmp_dir}"
+        FileUtils.remove_entry_secure(@tmp_dir)
       end
     end
 
     private
 
-    def determine_provider
-      metadata_file = File.join(@dir, 'metadata.json')
+    def determine_provider(dir)
+      metadata_file = File.join(dir, 'metadata.json')
       if File.exists? metadata_file
         begin
           metadata = JSON.load( File.new( metadata_file, 'r') )
@@ -78,15 +85,16 @@ module VagrantMutate
           raise Errors::DetermineProviderFailed, :error_message => e.message
         end
         @logger.info "Determined input provider is #{metadata['provider']}"
-        return Provider::Provider.create( metadata['provider'], self )
+        return metadata['provider']
       else
         @logger.info "No metadata found, so assuming input provider is virtualbox"
-        return Provider::Provider.create('virtualbox', self)
+        return 'virtualbox'
       end
     end
 
-    def find_input_dir
-      in_dir = File.join( @env.boxes_path, @name, 'virtualbox' )
+    def find_input_dir(name)
+      # cheat for now since only supported input is virtualbox
+      in_dir = File.join( @env.boxes_path, name, 'virtualbox' )
       if File.directory?(in_dir)
         @logger.info "Found input directory #{in_dir}"
         return in_dir
@@ -95,9 +103,9 @@ module VagrantMutate
       end
     end
 
-    def create_output_dir
+    def create_output_dir(name, provider_name)
       # e.g. $HOME/.vagrant.d/boxes/fedora-19/libvirt
-      out_dir = File.join( @env.boxes_path, @name, @provider.name )
+      out_dir = File.join( @env.boxes_path, name, provider_name )
       begin
         FileUtils.mkdir_p(out_dir)
       rescue => e

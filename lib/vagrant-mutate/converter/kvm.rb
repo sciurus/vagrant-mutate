@@ -1,40 +1,35 @@
 require 'erb'
 
 module VagrantMutate
-  module Provider
-    class Kvm < Provider
-      def initialize(box)
-          @box              = box
-          @name             = 'kvm'
-          @supported_input  = false,
-          @supported_output = true,
-          @image_format     = 'raw',
-          @image_name       = 'box-disk1.img'
-      end
+  module Converter
+    class Kvm < Converter
 
-      def generate_metadata(input_box)
+      def generate_metadata
         metadata = {
-          'provider' => @box.provider.name,
+          'provider' => @output_box.provider_name,
         }
       end
 
-      def write_specific_files(input_box)
+      def write_specific_files
         template_path = VagrantMutate.source_root.join('templates', 'kvm', 'box.xml.erb')
         template = File.read(template_path)
 
         uuid = nil
         gui = true
         disk_bus = 'virtio'
-        name = input_box.name
-        image_type = @image_format
-        disk = @image_name
-        qemu_bin = find_kvm
-        memory = input_box.provider.memory / 1024 # convert bytes to kib
-        cpus = input_box.provider.cpus
-        mac = input_box.provider.mac_address
-        arch = input_box.provider.architecture
 
-        File.open( File.join( @box.dir, 'box.xml'), 'w') do |f|
+        image_type = @output_box.image_format
+        disk = @output_box.image_name
+
+        name = @input_box.name
+        memory = @input_box.memory / 1024 # convert bytes to kib
+        cpus = @input_box.cpus
+        mac = @input_box.mac_address
+        arch = @input_box.architecture
+
+        qemu_bin = find_kvm
+
+        File.open( File.join( @output_box.dir, 'box.xml'), 'w') do |f|
           f.write( ERB.new(template).result(binding) )
         end
       end

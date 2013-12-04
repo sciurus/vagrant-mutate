@@ -1,19 +1,17 @@
 require "rexml/document"
+require_relative 'box'
 
 module VagrantMutate
-  module Provider
+  module Box
+    class Virtualbox < Box
 
-    class Virtualbox < Provider
-      def initialize(box)
-          @box              = box
-          @name             = 'virtualbox'
-          @supported_input  = true,
-          @supported_output = false,
-          @image_format     = 'vmdk',
-          @image_name       = 'box-disk1.vmdk'
-
-          definition = File.read( File.join( box.dir, 'box.ovf') )
-          @ovf = REXML::Document.new(definition)
+      def initialize(env, name, dir)
+        super
+        @provider_name     = 'virtualbox'
+        @supported_input  = true,
+        @supported_output = false,
+        @image_format     = 'vmdk',
+        @image_name       = 'box-disk1.vmdk'
       end
 
       # the architecture is not defined in the ovf file,
@@ -28,7 +26,7 @@ module VagrantMutate
 
       # use mac from the first enabled nic
       def mac_address
-        @ovf.elements.each("//vbox:Machine/Hardware//Adapter") do |ele|
+        ovf.elements.each("//vbox:Machine/Hardware//Adapter") do |ele|
           if ele.attributes['enabled'] == 'true'
             mac = ele.attributes['MACAddress']
             # convert to more standarad format with colons
@@ -40,7 +38,7 @@ module VagrantMutate
       end
 
       def cpus
-        @ovf.elements.each("//VirtualHardwareSection/Item") do |device|
+        ovf.elements.each("//VirtualHardwareSection/Item") do |device|
           if device.elements["rasd:ResourceType"].text == '3'
             return device.elements["rasd:VirtualQuantity"].text
           end
@@ -48,7 +46,7 @@ module VagrantMutate
       end
 
       def memory
-        @ovf.elements.each("//VirtualHardwareSection/Item") do |device|
+        ovf.elements.each("//VirtualHardwareSection/Item") do |device|
           if device.elements["rasd:ResourceType"].text == '4'
             return size_in_bytes(device.elements["rasd:VirtualQuantity"].text,
               device.elements["rasd:AllocationUnits"].text)
@@ -57,6 +55,10 @@ module VagrantMutate
       end
 
       private
+
+      def ovf
+        @ovf ||= REXML::Document.new( File.read( File.join( @dir, 'box.ovf') ) )
+      end
 
       # Takes a quantity and a unit
       # returns quantity in bytes
@@ -99,4 +101,3 @@ module VagrantMutate
 
   end
 end
-
