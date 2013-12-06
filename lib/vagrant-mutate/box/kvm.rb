@@ -9,7 +9,7 @@ module VagrantMutate
         @provider_name    = 'kvm'
         @supported_input  = false,
         @supported_output = true,
-        @image_format     = 'raw',
+        @image_format     = 'qcow2',
         @image_name       = 'box-disk1.img'
       end
 

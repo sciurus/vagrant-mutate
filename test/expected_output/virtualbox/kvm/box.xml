@@ -20,7 +20,7 @@
   <devices>
     <emulator>/usr/bin/kvm</emulator>
     <disk type='file' device='disk'>
-      <driver name='qemu' type='raw'/>
+      <driver name='qemu' type='qcow2'/>
       <source file='box-disk1.img'/>
       <target dev='vda' bus='virtio'/>
     
