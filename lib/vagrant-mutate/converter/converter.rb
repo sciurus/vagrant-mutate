@@ -120,7 +120,11 @@ module VagrantMutate
         input_format  = @input_box.image_format
         output_format = @output_box.image_format
 
-        command = "qemu-img convert -p -f #{input_format} -O #{output_format} #{input_file} #{output_file}"
+        # p for progress bar
+        # S for sparse file
+        qemu_options = '-p -S 16k'
+
+        command = "qemu-img convert #{qemu_options} -f #{input_format} -O #{output_format} #{input_file} #{output_file}"
         @logger.info "Running #{command}"
         unless system(command)
           raise Errors::WriteDiskFailed, :error_message => "qemu-img exited with status #{$?.exitstatus}"
