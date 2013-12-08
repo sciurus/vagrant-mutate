@@ -1,3 +1,9 @@
+# 0.1.4 (2013-12-08)
+* Rework box and converter implementation (#7)
+* Write disk images as sparse files (#13)
+* Switch vagrant-kvm disk format from raw to qcow2 (#16)
+* Prefer the binary named qemu-system-* over qemu-kvm or kvm (#20)
+
 # 0.1.3 (2013-12-03)
 
 * Add support for vagrant-kvm (#12)
