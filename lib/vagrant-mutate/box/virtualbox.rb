@@ -55,25 +55,27 @@ module VagrantMutate
       end
 
       def disk_interface
-        disk_contoller = {}
-        disk_type = nil
+        controller_type = {}
+        controller_used_by_disk = nil
         ovf.elements.each("//VirtualHardwareSection/Item") do |device|
+          # when we find a controller, store its ID and type
+          # when we find a disk, store the ID of the controller it is connected to
           case device.elements["rasd:ResourceType"].text
           when "5"
-             # IDE controller
-             disk_contoller[device.elements["rasd:InstanceID"].text] = 'ide'
+             controller_type[device.elements["rasd:InstanceID"].text] = 'ide'
            when "6"
-             # SCSI controller
-             disk_contoller[device.elements["rasd:InstanceID"].text] = 'scsi'
-           when "17"
-             # Disk
-             disk_type = device.elements["rasd:Parent"].text
+             controller_type[device.elements["rasd:InstanceID"].text] = 'scsi'
            when "20"
-             # SATA controller
-             disk_contoller[device.elements["rasd:InstanceID"].text] = 'sata'
+             controller_type[device.elements["rasd:InstanceID"].text] = 'sata'
+           when "17"
+             controller_used_by_disk = device.elements["rasd:Parent"].text
           end
         end
-        disk_contoller[disk_type] if disk_type
+        if controller_used_by_disk and controller_type[controller_used_by_disk]
+          return controller_type[controller_used_by_disk]
+        else
+          raise Errors::BoxAttributeError, :error_message => 'Could not determine disk interface'
+        end
       end
 
       private

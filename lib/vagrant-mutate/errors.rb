@@ -50,5 +50,9 @@ module VagrantMutate
       error_key(:determine_image_size_failed)
     end
 
+    class BoxAttributeError < VagrantMutateError
+      error_key(:box_attribute_error)
+    end
+
   end
 end

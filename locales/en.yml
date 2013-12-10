@@ -29,3 +29,6 @@ en:
         Determining the version of qemu-img installed failed
       determine_image_size_failed: |-
         Determining the virtual size of the disk image failed
+      box_attribute_error: |-
+        Error determining information about the input box:
+        %{error_message}
