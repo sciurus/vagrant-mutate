@@ -26,31 +26,52 @@ module VagrantMutate
 
       # use mac from the first enabled nic
       def mac_address
+        mac = nil
+
         ovf.elements.each("//vbox:Machine/Hardware//Adapter") do |ele|
           if ele.attributes['enabled'] == 'true'
-            mac = ele.attributes['MACAddress']
-            # convert to more standarad format with colons
-            return mac[0..1] + ":" + mac[2..3] + ":" +
-              mac[4..5] + ":" + mac[6..7] + ":" +
-              mac[8..9] + ":" + mac[10..11]
+            mac = format_mac( ele.attributes['MACAddress'] )
+            break
           end
+        end
+
+        if mac
+          return mac
+        else
+          raise Errors::BoxAttributeError, :error_message => 'Could not determine mac address'
         end
       end
 
       def cpus
+        cpu_count = nil
+
         ovf.elements.each("//VirtualHardwareSection/Item") do |device|
           if device.elements["rasd:ResourceType"].text == '3'
-            return device.elements["rasd:VirtualQuantity"].text
+            cpu_count = device.elements["rasd:VirtualQuantity"].text
           end
+        end
+
+        if cpu_count
+          return cpu_count
+        else
+          raise Errors::BoxAttributeError, :error_message => 'Could not determine number of CPUs'
         end
       end
 
       def memory
+        memory_in_bytes = nil
+
         ovf.elements.each("//VirtualHardwareSection/Item") do |device|
           if device.elements["rasd:ResourceType"].text == '4'
-            return size_in_bytes(device.elements["rasd:VirtualQuantity"].text,
+            memory_in_bytes = size_in_bytes(device.elements["rasd:VirtualQuantity"].text,
               device.elements["rasd:AllocationUnits"].text)
           end
+        end
+
+        if memory_in_bytes
+          return memory_in_bytes
+        else
+          raise Errors::BoxAttributeError, :error_message => 'Could not determine amount of memory'
         end
       end
 
@@ -82,6 +103,12 @@ module VagrantMutate
 
       def ovf
         @ovf ||= REXML::Document.new( File.read( File.join( @dir, 'box.ovf') ) )
+      end
+
+      # convert to more standard format with colons
+      def format_mac(mac)
+        mac[0..1] + ":" + mac[2..3] + ":" + mac[4..5] + ":" +
+          mac[6..7] + ":" + mac[8..9] + ":" + mac[10..11]
       end
 
       # Takes a quantity and a unit
