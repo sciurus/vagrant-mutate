@@ -54,6 +54,28 @@ module VagrantMutate
         end
       end
 
+      def disk_interface
+        disk_contoller = {}
+        disk_type = nil
+        ovf.elements.each("//VirtualHardwareSection/Item") do |device|
+          case device.elements["rasd:ResourceType"].text
+          when "5"
+             # IDE controller
+             disk_contoller[device.elements["rasd:InstanceID"].text] = 'ide'
+           when "6"
+             # SCSI controller
+             disk_contoller[device.elements["rasd:InstanceID"].text] = 'scsi'
+           when "17"
+             # Disk
+             disk_type = device.elements["rasd:Parent"].text
+           when "20"
+             # SATA controller
+             disk_contoller[device.elements["rasd:InstanceID"].text] = 'sata'
+          end
+        end
+        disk_contoller[disk_type] if disk_type
+      end
+
       private
 
       def ovf
