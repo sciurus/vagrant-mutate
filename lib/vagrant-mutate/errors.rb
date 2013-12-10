@@ -46,7 +46,7 @@ module VagrantMutate
       error_key(:parse_qemu_version_failed)
     end
 
-    class Errors::DetermineImageSizeFailed < VagrantMutateError
+    class DetermineImageSizeFailed < VagrantMutateError
       error_key(:determine_image_size_failed)
     end
 
