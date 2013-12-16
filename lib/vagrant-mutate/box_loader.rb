@@ -1,12 +1,9 @@
-require 'archive/tar/minitar'
 require 'fileutils'
 require 'json'
 require 'zlib'
 
 module VagrantMutate
   class BoxLoader
-
-    include Archive::Tar
 
     def initialize( env )
       @env = env
@@ -120,17 +117,11 @@ module VagrantMutate
       unless File.exists? file
         raise Errors::BoxNotFound, :box => file
       end
-      # box may or may not be gzipped
-      begin
-        tar = Zlib::GzipReader.new(File.open(file, 'rb'))
-      rescue
-        tar = file
-      end
-      begin
-        tmp_dir = Dir.mktmpdir
-        Minitar.unpack(tar, tmp_dir)
-      rescue => e
-        raise Errors::ExtractBoxFailed, :error_message => e.message
+      tmp_dir = Dir.mktmpdir
+      result = Vagrant::Util::Subprocess.execute(
+       "bsdtar", "-v", "-x", "-m", "-C", tmp_dir.to_s, "-f", file)
+      if result.exit_code != 0
+        raise Errors::ExtractBoxFailed, :error_message => result.stderr.to_s
       end
       @logger.info "Unpacked box to #{tmp_dir}"
       return tmp_dir
