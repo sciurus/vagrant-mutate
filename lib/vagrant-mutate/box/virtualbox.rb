@@ -102,7 +102,16 @@ module VagrantMutate
       private
 
       def ovf
-        @ovf ||= REXML::Document.new( File.read( File.join( @dir, 'box.ovf') ) )
+        if @ovf
+          return @ovf
+        end
+
+        ovf_file = File.join( @dir, 'box.ovf')
+        begin
+          @ovf = REXML::Document.new( File.read(ovf_file) )
+        rescue => e
+          raise Errors::BoxAttributeError, :error_message => e.message
+        end
       end
 
       # convert to more standard format with colons
