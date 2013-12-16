@@ -107,8 +107,7 @@ module VagrantMutate
 
       # convert to more standard format with colons
       def format_mac(mac)
-        mac[0..1] + ":" + mac[2..3] + ":" + mac[4..5] + ":" +
-          mac[6..7] + ":" + mac[8..9] + ":" + mac[10..11]
+        mac.scan(/(.{2})/).join(':')
       end
 
       # Takes a quantity and a unit
