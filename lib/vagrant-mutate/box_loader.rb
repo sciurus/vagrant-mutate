@@ -86,7 +86,7 @@ module VagrantMutate
 
       # if this fails it will raise an error and we'll quit
       @env.ui.info "Downloading box #{name} from #{url}"
-      downloader = Vagrant::Util::Downloader.new(url, download_path)
+      downloader = Vagrant::Util::Downloader.new(url, download_path, { :ui => @env.ui })
       downloader.download!
 
       dir = unpack(download_path)
