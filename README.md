@@ -41,14 +41,17 @@ To install from source, clone the repository and run `rake build`. That will pro
 
 The basic usage is
 
-    vagrant mutate box-name-or-file output-provider
+    vagrant mutate box-name-or-file-or-url output-provider
 
 For example, if you wanted to download a box created for virtualbox and add it to vagrant for libvirt
 
-    wget http://files.vagrantup.com/precise32.box
+    vagrant mutate http://files.vagrantup.com/precise32.box libvirt
+
+Or if you had already downloaded it
+
     vagrant mutate precise32.box libvirt
 
-Or, if you had already added the virtualbox version of the box to vagrant and now want to use it with libvirt
+Or if you had already added the virtualbox version of the box to vagrant and now want to use it with libvirt
 
     vagrant mutate precise32 libvirt
 

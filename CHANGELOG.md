@@ -1,3 +1,9 @@
+# 0.1.5 (2013-12-17)
+* Preserve dsik interface type when coverting to KVM (#21)
+* Remove dependency in minitar (#24)
+* Support downloading input box (#9)
+* Handle errors when reading ovf file
+
 # 0.1.4 (2013-12-08)
 * Rework box and converter implementation (#7)
 * Write disk images as sparse files (#13)
