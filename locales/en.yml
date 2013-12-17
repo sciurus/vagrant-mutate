@@ -32,3 +32,5 @@ en:
       box_attribute_error: |-
         Error determining information about the input box:
         %{error_message}
+      url_error: |-
+          The url %{url} is not valid

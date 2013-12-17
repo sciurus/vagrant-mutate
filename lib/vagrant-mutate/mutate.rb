@@ -20,15 +20,11 @@ module VagrantMutate
       box_arg = argv[0]
       output_provider_arg = argv[1]
 
+
       input_loader  = BoxLoader.new(@env)
+      input_box = input_loader.load(box_arg)
+
       output_loader = BoxLoader.new(@env)
-
-      if box_arg =~ /\.box$/
-        input_box = input_loader.load_from_file(box_arg)
-      else
-        input_box = input_loader.load_by_name(box_arg)
-      end
-
       output_box = output_loader.prepare_for_output( input_box.name, output_provider_arg)
 
       converter  = Converter::Converter.create(@env, input_box, output_box)

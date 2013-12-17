@@ -54,5 +54,9 @@ module VagrantMutate
       error_key(:box_attribute_error)
     end
 
+    class URLError < VagrantMutateError
+      error_key(:url_error)
+    end
+
   end
 end

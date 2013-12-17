@@ -1,6 +1,8 @@
 require 'fileutils'
 require 'json'
-require 'zlib'
+require 'uri'
+require "vagrant/util/subprocess"
+require "vagrant/util/downloader"
 
 module VagrantMutate
   class BoxLoader
@@ -8,7 +10,7 @@ module VagrantMutate
     def initialize( env )
       @env = env
       @logger = Log4r::Logger.new('vagrant::mutate')
-      @tmp_dir = nil
+      @tmp_files = []
     end
 
     def create_box(provider_name, name, dir)
@@ -33,26 +35,74 @@ module VagrantMutate
       dir = create_output_dir(name, provider_name)
       box = create_box(provider_name, name, dir)
 
-      unless box.supported_output
+      if box.supported_output
+        return box
+      else
         raise Errors::ProviderNotSupported, :provider => provider_name, :direction => 'output'
       end
+    end
 
-      return box
+    def load(box_arg)
+      if box_arg =~ /:\/\//
+        box = load_from_url(box_arg)
+      elsif box_arg =~ /\.box$/
+        box = load_from_file(box_arg)
+      else
+        box = load_by_name(box_arg)
+      end
+
+      if box.supported_input
+        return box
+      else
+        raise Errors::ProviderNotSupported, :provider => provider_name, :direction => 'input'
+      end
+    end
+
+    def load_from_url(url)
+      @logger.info "Loading box from url #{url}"
+
+      # test that we have a valid url
+      url = URI(url)
+      unless url.scheme and url.host and url.path
+        raise Errors::URLError, :url => url
+      end
+
+      # extract the name of the box from the url
+      # if it ends in .box remove that extension
+      # if not just remove leading slash
+      name = nil
+      if url.path =~ /(\w+).box$/
+        name = $1
+      else
+        name = url.path.sub(/^\//, '')
+      end
+      if name.empty?
+        raise Errors::URLError, :url => url
+      end
+
+      # using same path as in vagrants box add action
+      download_path = File.join(@env.tmp_path, 'box' + Digest::SHA1.hexdigest(url.to_s))
+      @tmp_files << download_path
+
+      # if this fails it will raise an error and we'll quit
+      @env.ui.info "Downloading box #{name} from #{url}"
+      downloader = Vagrant::Util::Downloader.new(url, download_path)
+      downloader.download!
+
+      dir = unpack(download_path)
+
+      provider_name = determine_provider(dir)
+
+      box = create_box(provider_name, name, dir)
     end
 
     def load_from_file(file)
       @logger.info "Loading box from file #{file}"
       name = File.basename( file, File.extname(file) )
       dir = unpack(file)
-      @tmp_dir = dir
       provider_name = determine_provider(dir)
+
       box = create_box(provider_name, name, dir)
-
-      unless box.supported_input
-        raise Errors::ProviderNotSupported, :provider => provider_name, :direction => 'input'
-      end
-
-      return box
     end
 
     def load_by_name(name)
@@ -60,14 +110,15 @@ module VagrantMutate
       dir = find_input_dir(name)
       # cheat for now since only supported input is virtualbox
       box = create_box('virtualbox', name, dir)
-      return box
     end
 
     def cleanup
-      if @tmp_dir
+      unless @tmp_files.empty?
         @env.ui.info "Cleaning up temporary files."
-        @logger.info "Deleting #{@tmp_dir}"
-        FileUtils.remove_entry_secure(@tmp_dir)
+        @tmp_files.each do |f|
+          @logger.info "Deleting #{f}"
+          FileUtils.remove_entry_secure(f)
+        end
       end
     end
 
@@ -117,7 +168,8 @@ module VagrantMutate
       unless File.exists? file
         raise Errors::BoxNotFound, :box => file
       end
-      tmp_dir = Dir.mktmpdir
+      tmp_dir = Dir.mktmpdir(nil, @env.tmp_path)
+      @tmp_files << tmp_dir
       result = Vagrant::Util::Subprocess.execute(
        "bsdtar", "-v", "-x", "-m", "-C", tmp_dir.to_s, "-f", file)
       if result.exit_code != 0
