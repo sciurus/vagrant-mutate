@@ -29,6 +29,21 @@ def install_plugin
   Dir.chdir working_dir
 end
 
+# convering libvirt to kvm has some random output which we must replace
+# with the static "random" value in the sampe output we are comapring against
+def derandomize_output(input, output_dir)
+  if input == 'libvirt'
+    if File.split(output_dir).last == 'kvm'
+      path = File.join(output_dir, 'box.xml')
+      contents = File.read(path)
+      contents.gsub!(/52:54:00:[0-9a-f:]+/, '52:54:00:cb:b2:80')
+      File.open(path, 'w') do |f|
+        f.write(contents)
+      end
+    end
+  end
+end
+
 def test(input, outputs)
   failures = []
   test_dir = File.expand_path( File.dirname(__FILE__) ) 
@@ -45,13 +60,14 @@ def test(input, outputs)
     system("vagrant mutate #{input_box} #{output}")
     output_dir = File.join(vagrant_dir, 'boxes', 'mutate-test', output)
     expected_output_dir = File.join(test_dir, 'expected_output', input, output)
+    derandomize_output(input, output_dir)
     Dir.foreach(expected_output_dir) do |f|
       next if f == '.' or f == '..'
       output = File.join(output_dir, f)
       expected_output = File.join(expected_output_dir, f)
       test_passed = FileUtils.compare_file(output, expected_output)
       unless test_passed
-        failures.push "#{output} does not match #{expected_output}"
+        failures.push "These two files do not match #{output} #{expected_output}"
       end
     end
   end
@@ -62,6 +78,7 @@ end
 cleanup
 build_plugin
 failures = test( 'virtualbox', ['kvm', 'libvirt'] )
+failures += test( 'libvirt', ['kvm'] )
 
 unless failures.empty?
   puts "\nTESTS FAILED"

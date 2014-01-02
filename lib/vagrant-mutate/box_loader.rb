@@ -1,4 +1,3 @@
-require 'find'
 require 'fileutils'
 require 'json'
 require 'uri'
