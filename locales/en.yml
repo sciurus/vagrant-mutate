@@ -1,6 +1,8 @@
 en:
   vagrant_mutate:
     errors:
+      providers_match: |-
+        Input and output provider are the same. Aborting.
       provider_not_supported: |-
         Vagrant-mutate does not support %{provider} for %{direction}
       qemu_not_found: |-

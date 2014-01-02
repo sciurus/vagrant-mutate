@@ -20,7 +20,6 @@ module VagrantMutate
       box_arg = argv[0]
       output_provider_arg = argv[1]
 
-
       input_loader  = BoxLoader.new(@env)
       input_box = input_loader.load(box_arg)
 

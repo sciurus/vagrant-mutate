@@ -27,6 +27,10 @@ module VagrantMutate
       end
 
       def convert()
+        if @input_box.provider_name == @output_box.provider_name
+          raise Errors::ProvidersMatch
+        end
+
         @env.ui.info "Converting #{@input_box.name} from #{@input_box.provider_name} "\
           "to #{@output_box.provider_name}."
 
