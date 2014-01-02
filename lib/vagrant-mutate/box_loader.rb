@@ -146,7 +146,6 @@ module VagrantMutate
 
     def parse_identifier(identifier)
       if identifier =~ /^([\w-]+)#{File::SEPARATOR}([\w-]+)$/
-      #if identifier =~ /^([\w-]+)\/([\w-]+)$/
         @logger.info "Parsed provider name as #{$1} and box name as #{$2}"
         return $1, $2
       else
