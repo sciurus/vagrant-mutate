@@ -8,9 +8,9 @@ module VagrantMutate
       def initialize(env, name, dir)
         super
         @provider_name     = 'virtualbox'
-        @supported_input  = true,
-        @supported_output = false,
-        @image_format     = 'vmdk',
+        @supported_input  = true
+        @supported_output = false
+        @image_format     = 'vmdk'
         @image_name       = 'box-disk1.vmdk'
       end
 
