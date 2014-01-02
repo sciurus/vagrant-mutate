@@ -30,7 +30,7 @@ def install_plugin
 end
 
 # convering libvirt to kvm has some random output which we must replace
-# with the static "random" value in the sampe output we are comapring against
+# with the static "random" value in the sample output we are comparing against
 def derandomize_output(input, output_dir)
   if input == 'libvirt'
     if File.split(output_dir).last == 'kvm'
@@ -79,6 +79,7 @@ cleanup
 build_plugin
 failures = test( 'virtualbox', ['kvm', 'libvirt'] )
 failures += test( 'libvirt', ['kvm'] )
+failures += test( 'kvm', ['libvirt'] )
 
 unless failures.empty?
   puts "\nTESTS FAILED"
