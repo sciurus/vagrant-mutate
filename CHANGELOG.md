@@ -1,3 +1,8 @@
+# 0.2.0 (2014-01-02)
+* Fix how box is loaded by name (#19)
+* Quit if input and output provider are the same (#27)
+* Support libvirt as input (#18)
+
 # 0.1.5 (2013-12-17)
 * Preserve dsik interface type when coverting to KVM (#21)
 * Remove dependency in minitar (#24)
