@@ -18,6 +18,10 @@ module VagrantMutate
       error_key(:box_not_found)
     end
 
+    class TooManyBoxesFound < VagrantMutateError
+      error_key(:too_many_boxes_found)
+    end
+
     class ExtractBoxFailed < VagrantMutateError
       error_key(:extract_box_failed)
     end

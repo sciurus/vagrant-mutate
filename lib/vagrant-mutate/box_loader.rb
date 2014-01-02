@@ -1,3 +1,4 @@
+require 'find'
 require 'fileutils'
 require 'json'
 require 'uri'
@@ -48,13 +49,13 @@ module VagrantMutate
       elsif box_arg =~ /\.box$/
         box = load_from_file(box_arg)
       else
-        box = load_by_name(box_arg)
+        box = load_from_boxes_path(box_arg)
       end
 
       if box.supported_input
         return box
       else
-        raise Errors::ProviderNotSupported, :provider => provider_name, :direction => 'input'
+        raise Errors::ProviderNotSupported, :provider => box.provider_name, :direction => 'input'
       end
     end
 
@@ -105,11 +106,15 @@ module VagrantMutate
       box = create_box(provider_name, name, dir)
     end
 
-    def load_by_name(name)
-      @logger.info "Loading box from name #{name}"
-      dir = find_input_dir(name)
-      # cheat for now since only supported input is virtualbox
-      box = create_box('virtualbox', name, dir)
+    def load_from_boxes_path(identifier)
+      @logger.info "Loading box #{identifier} from vagrants box path"
+      provider_name, name = parse_identifier(identifier)
+      if provider_name
+        dir = verify_input_dir(provider_name, name)
+      else
+        provider_name, dir = find_input_dir(name)
+      end
+      box = create_box(provider_name, name, dir)
     end
 
     def cleanup
@@ -140,14 +145,47 @@ module VagrantMutate
       end
     end
 
-    def find_input_dir(name)
-      # cheat for now since only supported input is virtualbox
-      in_dir = File.join( @env.boxes_path, name, 'virtualbox' )
-      if File.directory?(in_dir)
-        @logger.info "Found input directory #{in_dir}"
-        return in_dir
+    def parse_identifier(identifier)
+      if identifier =~ /^([\w-]+)#{File::SEPARATOR}([\w-]+)$/
+      #if identifier =~ /^([\w-]+)\/([\w-]+)$/
+        @logger.info "Parsed provider name as #{$1} and box name as #{$2}"
+        return $1, $2
       else
-        raise Errors::BoxNotFound, :box => in_dir
+        @logger.info "Parsed provider name as not given and box name as #{identifier}"
+        return nil, identifier
+      end
+    end
+
+    def find_input_dir(name)
+      box_parent_dir = File.join( @env.boxes_path, name)
+
+      if Dir.exist?(box_parent_dir)
+        providers = Dir.entries(box_parent_dir).reject { |entry| entry =~ /^\./ }
+        @logger.info "Found potential providers #{providers}"
+      else
+        providers = []
+      end
+
+      case
+      when providers.length < 1
+        raise Errors::BoxNotFound, :box => name
+      when providers.length > 1
+        raise Errors::TooManyBoxesFound, :box => name
+      else
+        provider_name = providers.first
+        input_dir = File.join( box_parent_dir, provider_name)
+        @logger.info "Found source for box #{name} from provider #{provider_name} at #{input_dir}"
+        return provider_name, input_dir
+      end
+    end
+
+    def verify_input_dir(provider_name, name)
+      input_dir = File.join( @env.boxes_path, name, provider_name)
+      if File.directory?(input_dir)
+        @logger.info "Found input directory #{input_dir}"
+        return input_dir
+      else
+        raise Errors::BoxNotFound, :box => input_dir
       end
     end
 

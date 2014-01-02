@@ -51,9 +51,16 @@ Or if you had already downloaded it
 
     vagrant mutate precise32.box libvirt
 
-Or if you had already added the virtualbox version of the box to vagrant and now want to use it with libvirt
+Or if you had already added the box to vagrant and now want to use it with libvirt
 
     vagrant mutate precise32 libvirt
+
+If you have a box for multiple providers, you must specify the provider to use for input by prepending it to the name with a slash, e.g.
+
+    $ vagrant box list
+    precise32  (kvm)
+    precise32  (virtualbox)
+    $ vagrant mutate virtualbox/precise32 libvirt
 
 To export a box you created with vagrant mutate, just repackage it, e.g.
 

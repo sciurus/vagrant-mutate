@@ -6,7 +6,9 @@ en:
       qemu_not_found: |-
         Qemu-img was not found in your path
       box_not_found: |-
-        The box at %{box} was not found
+        The box %{box} was not found
+      too_many_boxes_found: |-
+        More than one box named %{box} was found. Please specify the input provider as well.
       extract_box_failed: |-
         Extracting box failed with error:
         %{error_message}
