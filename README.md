@@ -1,18 +1,19 @@
 # Vagrant-Mutate
 
-Vagrant-mutate is a [vagrant](http://www.vagrantup.com/) plugin to convert vagrant boxes to work with different providers.
+Vagrant-mutate is a vagrant plugin to convert vagrant boxes to work with different providers.
 
 ## Supported Conversions
 
 * Virtualbox to kvm
 * Virtualbox to libvirt
 * Libvirt to kvm
+* Kvm to libvirt
 
 ## Compatibility
 
 Vagrant-mutate has been tested against the following versions. It may work with other versions too.
 
-* vagrant 1.3.5
+* [vagrant](http://www.vagrantup.com) 1.3.5
 * [vagrant-kvm](https://github.com/adrahon/vagrant-kvm) 0.1.4
 * [vagrant-libvirt](https://github.com/pradels/vagrant-libvirt) 0.0.11
 

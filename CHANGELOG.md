@@ -1,3 +1,6 @@
+# 0.2.1 (2014-01-02)
+* Support kvm as input (#17)
+
 # 0.2.0 (2014-01-02)
 * Fix how box is loaded by name (#19)
 * Quit if input and output provider are the same (#27)
