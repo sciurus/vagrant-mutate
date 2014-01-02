@@ -4,8 +4,17 @@ Vagrant-mutate is a [vagrant](http://www.vagrantup.com/) plugin to convert vagra
 
 ## Supported Conversions
 
-* Virtualbox to [kvm](https://github.com/adrahon/vagrant-kvm) (tested against 0.1.4)
-* Virtualbox to [libvirt](https://github.com/pradels/vagrant-libvirt) (tested against 0.0.11)
+* Virtualbox to kvm
+* Virtualbox to libvirt
+* Libvirt to kvm
+
+## Compatibility
+
+Vagrant-mutate has been tested against the following versions. It may work with other versions too.
+
+* vagrant 1.3.5
+* [vagrant-kvm](https://github.com/adrahon/vagrant-kvm) 0.1.4
+* [vagrant-libvirt](https://github.com/pradels/vagrant-libvirt) 0.0.11
 
 ## Installation
 
