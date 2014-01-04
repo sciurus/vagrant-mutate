@@ -1,4 +1,5 @@
 require 'vagrant-mutate/box_loader'
+require 'vagrant-mutate/qemu'
 require 'vagrant-mutate/converter/converter'
 
 module VagrantMutate
@@ -19,6 +20,9 @@ module VagrantMutate
 
       box_arg = argv[0]
       output_provider_arg = argv[1]
+
+      Qemu.verify_qemu_installed
+      Qemu.verify_qemu_version(@env)
 
       input_loader  = BoxLoader.new(@env)
       input_box = input_loader.load(box_arg)
