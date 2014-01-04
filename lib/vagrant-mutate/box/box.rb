@@ -12,7 +12,7 @@ module VagrantMutate
       end
 
       def virtual_size
-        input_file = File.join( @dir, @image_name )
+        input_file = File.join( @dir, image_name )
         info = `qemu-img info #{input_file}`
         @logger.debug "qemu-img info output\n#{info}"
         if info =~ /(\d+) bytes/

@@ -11,7 +11,11 @@ module VagrantMutate
         @supported_input  = true
         @supported_output = false
         @image_format     = 'vmdk'
-        @image_name       = 'box-disk1.vmdk'
+      end
+
+      # this is usually box-disk1.vmdk but some tools like packer customize it
+      def image_name
+        ovf.elements['//References/File'].attributes['ovf:href']
       end
 
       # the architecture is not defined in the ovf file,
