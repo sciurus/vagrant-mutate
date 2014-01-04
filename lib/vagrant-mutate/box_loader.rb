@@ -13,23 +13,6 @@ module VagrantMutate
       @tmp_files = []
     end
 
-    def create_box(provider_name, name, dir)
-        @logger.info "Creating box #{name} with provider #{provider_name} in #{dir}"
-        case provider_name
-        when 'kvm'
-          require_relative 'box/kvm'
-          Box::Kvm.new(@env, name, dir)
-        when 'libvirt'
-          require_relative 'box/libvirt'
-          Box::Libvirt.new(@env, name, dir)
-        when 'virtualbox'
-          require_relative 'box/virtualbox'
-          Box::Virtualbox.new(@env, name, dir)
-        else
-          raise Errors::ProviderNotSupported, :provider => provider_name, :direction => 'input or output'
-        end
-    end
-
     def prepare_for_output(name, provider_name)
       @logger.info "Preparing #{name} for output as #{provider_name}"
       dir = create_output_dir(name, provider_name)
@@ -128,63 +111,21 @@ module VagrantMutate
 
     private
 
-    def determine_provider(dir)
-      metadata_file = File.join(dir, 'metadata.json')
-      if File.exists? metadata_file
-        begin
-          metadata = JSON.load( File.new( metadata_file, 'r') )
-        rescue => e
-          raise Errors::DetermineProviderFailed, :error_message => e.message
+    def create_box(provider_name, name, dir)
+        @logger.info "Creating box #{name} with provider #{provider_name} in #{dir}"
+        case provider_name
+        when 'kvm'
+          require_relative 'box/kvm'
+          Box::Kvm.new(@env, name, dir)
+        when 'libvirt'
+          require_relative 'box/libvirt'
+          Box::Libvirt.new(@env, name, dir)
+        when 'virtualbox'
+          require_relative 'box/virtualbox'
+          Box::Virtualbox.new(@env, name, dir)
+        else
+          raise Errors::ProviderNotSupported, :provider => provider_name, :direction => 'input or output'
         end
-        @logger.info "Determined input provider is #{metadata['provider']}"
-        return metadata['provider']
-      else
-        @logger.info "No metadata found, so assuming input provider is virtualbox"
-        return 'virtualbox'
-      end
-    end
-
-    def parse_identifier(identifier)
-      if identifier =~ /^([\w-]+)#{File::SEPARATOR}([\w-]+)$/
-        @logger.info "Parsed provider name as #{$1} and box name as #{$2}"
-        return $1, $2
-      else
-        @logger.info "Parsed provider name as not given and box name as #{identifier}"
-        return nil, identifier
-      end
-    end
-
-    def find_input_dir(name)
-      box_parent_dir = File.join( @env.boxes_path, name)
-
-      if Dir.exist?(box_parent_dir)
-        providers = Dir.entries(box_parent_dir).reject { |entry| entry =~ /^\./ }
-        @logger.info "Found potential providers #{providers}"
-      else
-        providers = []
-      end
-
-      case
-      when providers.length < 1
-        raise Errors::BoxNotFound, :box => name
-      when providers.length > 1
-        raise Errors::TooManyBoxesFound, :box => name
-      else
-        provider_name = providers.first
-        input_dir = File.join( box_parent_dir, provider_name)
-        @logger.info "Found source for box #{name} from provider #{provider_name} at #{input_dir}"
-        return provider_name, input_dir
-      end
-    end
-
-    def verify_input_dir(provider_name, name)
-      input_dir = File.join( @env.boxes_path, name, provider_name)
-      if File.directory?(input_dir)
-        @logger.info "Found input directory #{input_dir}"
-        return input_dir
-      else
-        raise Errors::BoxNotFound, :box => input_dir
-      end
     end
 
     def create_output_dir(name, provider_name)
@@ -213,6 +154,65 @@ module VagrantMutate
       end
       @logger.info "Unpacked box to #{tmp_dir}"
       return tmp_dir
+    end
+
+    def determine_provider(dir)
+      metadata_file = File.join(dir, 'metadata.json')
+      if File.exists? metadata_file
+        begin
+          metadata = JSON.load( File.new( metadata_file, 'r') )
+        rescue => e
+          raise Errors::DetermineProviderFailed, :error_message => e.message
+        end
+        @logger.info "Determined input provider is #{metadata['provider']}"
+        return metadata['provider']
+      else
+        @logger.info "No metadata found, so assuming input provider is virtualbox"
+        return 'virtualbox'
+      end
+    end
+
+    def parse_identifier(identifier)
+      if identifier =~ /^([\w-]+)#{File::SEPARATOR}([\w-]+)$/
+        @logger.info "Parsed provider name as #{$1} and box name as #{$2}"
+        return $1, $2
+      else
+        @logger.info "Parsed provider name as not given and box name as #{identifier}"
+        return nil, identifier
+      end
+    end
+
+    def verify_input_dir(provider_name, name)
+      input_dir = File.join( @env.boxes_path, name, provider_name)
+      if File.directory?(input_dir)
+        @logger.info "Found input directory #{input_dir}"
+        return input_dir
+      else
+        raise Errors::BoxNotFound, :box => input_dir
+      end
+    end
+
+    def find_input_dir(name)
+      box_parent_dir = File.join( @env.boxes_path, name)
+
+      if Dir.exist?(box_parent_dir)
+        providers = Dir.entries(box_parent_dir).reject { |entry| entry =~ /^\./ }
+        @logger.info "Found potential providers #{providers}"
+      else
+        providers = []
+      end
+
+      case
+      when providers.length < 1
+        raise Errors::BoxNotFound, :box => name
+      when providers.length > 1
+        raise Errors::TooManyBoxesFound, :box => name
+      else
+        provider_name = providers.first
+        input_dir = File.join( box_parent_dir, provider_name)
+        @logger.info "Found source for box #{name} from provider #{provider_name} at #{input_dir}"
+        return provider_name, input_dir
+      end
     end
 
   end
