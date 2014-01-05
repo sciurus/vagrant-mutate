@@ -1,3 +1,7 @@
+# 0.2.2 (2014-01-05)
+* Determine virtualbox disk filename from ovf (#30)
+* Move Qemu checks to own class
+
 # 0.2.1 (2014-01-02)
 * Support kvm as input (#17)
 
