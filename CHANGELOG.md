@@ -1,3 +1,9 @@
+# 0.2.3 (2014-01-20)
+* Warn when qemu version cannot read vmdk3 files (#29)
+* Fix errors in how box name and provider were parsed (#35)
+* Load box from file based on existence not name (#36)
+* Warn when image is not the expected type for the provider (#38)
+
 # 0.2.2 (2014-01-05)
 * Determine virtualbox disk filename from ovf (#30)
 * Move Qemu checks to own class

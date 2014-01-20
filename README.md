@@ -21,7 +21,7 @@ Vagrant-mutate has been tested against the following versions. It may work with 
 
 ### qemu-img
 
-First, you must install [qemu-img](http://wiki.qemu.org/Main_Page). Support for the disk image format most commonly used in vagrant boxes for virtualbox was added in [version 1.2.0](http://wiki.qemu.org/ChangeLog/1.2#VMDK); if you have an older version vagrant-mutate will warn you and most likely won't work.
+First, you must install [qemu-img](http://wiki.qemu.org/Main_Page). Information on supported versions is listed at [QEMU Version Compatibility](https://github.com/sciurus/vagrant-mutate/wiki/QEMU-Version-Compatibility).
 
 #### Debian and derivatives
 
