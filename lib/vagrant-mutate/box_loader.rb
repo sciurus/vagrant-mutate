@@ -28,7 +28,7 @@ module VagrantMutate
     def load(box_arg)
       if box_arg =~ /:\/\//
         box = load_from_url(box_arg)
-      elsif box_arg =~ /\.box$/
+      elsif File.exists?(box_arg)
         box = load_from_file(box_arg)
       else
         box = load_from_boxes_path(box_arg)
