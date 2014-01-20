@@ -173,12 +173,16 @@ module VagrantMutate
     end
 
     def parse_identifier(identifier)
-      if identifier =~ /^([\w-]+)#{File::SEPARATOR}([\w-]+)$/
-        @logger.info "Parsed provider name as #{$1} and box name as #{$2}"
-        return $1, $2
-      else
+      split_id = identifier.split('/')
+      case split_id.length
+      when 2
+        @logger.info "Parsed provider name as #{split_id[0]} and box name as #{split_id[1]}"
+        return split_id[0], split_id[1]
+      when 1
         @logger.info "Parsed provider name as not given and box name as #{identifier}"
         return nil, identifier
+      else
+          raise Errors::ParseIdentifierFailed, :identifier => identifier
       end
     end
 

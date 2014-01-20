@@ -14,6 +14,9 @@ en:
       extract_box_failed: |-
         Extracting box failed with error:
         %{error_message}
+      parse_identifier_failed: |-
+        Expected name or provider/name but you gave %{identifier}.
+        If you meant to specify a box by name fix this. If you meant to specify a box by path make sure the file exists.
       determine_provider_failed: |-
         Determining provider for box failed with error:
         %{error_message}
