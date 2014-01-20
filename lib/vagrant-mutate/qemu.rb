@@ -21,12 +21,16 @@ module VagrantMutate
       def self.verify_qemu_version(env)
         usage = `qemu-img`
         if usage =~ /(\d+\.\d+\.\d+)/
-          recommended_version = Gem::Version.new('1.2.0')
           installed_version = Gem::Version.new($1)
-          if installed_version < recommended_version
+          # will need to change test once a version > 1.6 has a fix
+          if installed_version < Gem::Version.new('1.2.0') or
+              installed_version >= Gem::Version.new('1.6.0')
+
             env.ui.warn "You have qemu #{installed_version} installed. "\
-              "This version is too old to read some virtualbox boxes. "\
-              "If conversion fails, try upgrading to qemu 1.2.0 or newer."
+              "This version cannot read some virtualbox boxes. "\
+              "If conversion fails, see below for recommendations. "\
+              "https://github.com/sciurus/vagrant-mutate/wiki/QEMU-Version-Compatibility"
+
           end
         else
           raise Errors::ParseQemuVersionFailed
