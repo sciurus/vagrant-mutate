@@ -12,13 +12,25 @@ module VagrantMutate
       end
 
       def virtual_size
+        extract_from_qemu_info( /(\d+) bytes/ )
+      end
+
+      def verify_format
+        format_found = extract_from_qemu_info( /file format: (\w+)/ )
+        unless format_found == @image_format
+          @env.ui.warn "Expected input image format to be #{@image_format} but "\
+            "it is #{format_found}. Attempting conversion anyway."
+        end
+      end
+
+      def extract_from_qemu_info(expression)
         input_file = File.join( @dir, image_name )
         info = `qemu-img info #{input_file}`
         @logger.debug "qemu-img info output\n#{info}"
-        if info =~ /(\d+) bytes/
+        if info =~ expression
           return $1
         else
-          raise Errors::DetermineImageSizeFailed
+          raise Errors::QemuInfoFailed
         end
       end
 

@@ -32,6 +32,7 @@ module VagrantMutate
         @env.ui.info "Converting #{@input_box.name} from #{@input_box.provider_name} "\
           "to #{@output_box.provider_name}."
 
+        @input_box.verify_format
         write_metadata
         copy_vagrantfile
         write_specific_files
@@ -95,7 +96,7 @@ module VagrantMutate
         # S for sparse file
         qemu_options = '-p -S 16k'
 
-        command = "qemu-img convert #{qemu_options} -f #{input_format} -O #{output_format} #{input_file} #{output_file}"
+        command = "qemu-img convert #{qemu_options} -O #{output_format} #{input_file} #{output_file}"
         @logger.info "Running #{command}"
         unless system(command)
           raise Errors::WriteDiskFailed, :error_message => "qemu-img exited with status #{$?.exitstatus}"

@@ -58,8 +58,8 @@ module VagrantMutate
       error_key(:parse_qemu_version_failed)
     end
 
-    class DetermineImageSizeFailed < VagrantMutateError
-      error_key(:determine_image_size_failed)
+    class QemuInfoFailed < VagrantMutateError
+      error_key(:qemu_info_failed)
     end
 
     class BoxAttributeError < VagrantMutateError
