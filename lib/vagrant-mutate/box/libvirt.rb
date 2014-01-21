@@ -11,6 +11,7 @@ module VagrantMutate
         @supported_output = true
         @image_format     = 'qcow2'
         @image_name       = 'box.img'
+        @mac              = nil
       end
 
       # since none of below can be determined from the box
@@ -22,8 +23,11 @@ module VagrantMutate
 
       # kvm prefix is 52:54:00
       def mac_address
-        octets = 3.times.map { rand(255).to_s(16) }
-        return "52:54:00:#{octets[0]}:#{octets[1]}:#{octets[2]}"
+        unless @mac
+          octets = 3.times.map { rand(255).to_s(16) }
+          @mac = "525400#{octets[0]}#{octets[1]}#{octets[2]}"
+        end
+        return @mac
       end
 
       def cpus

@@ -34,13 +34,12 @@ module VagrantMutate
 
         @input_box.verify_format
         write_metadata
-        copy_vagrantfile
+        write_vagrantfile
         write_specific_files
         write_disk
       end
 
       private
-
 
       def write_metadata
         metadata = generate_metadata
@@ -54,17 +53,18 @@ module VagrantMutate
         @logger.info "Wrote metadata"
       end
 
-      def copy_vagrantfile
-        input = File.join( @input_box.dir, 'Vagrantfile' )
-        if File.exists? input
-          output = File.join( @output_box.dir, 'Vagrantfile' )
-          @logger.info "Copying #{input} to #{output}"
-          begin
-            FileUtils.copy_file(input, output)
-          rescue => e
-            raise Errors::WriteVagrantfileFailed, :error_message => e.message
+      def write_vagrantfile
+        body = generate_vagrantfile
+        begin
+          File.open( File.join( @output_box.dir, 'Vagrantfile'), 'w') do |f|
+            f.puts( 'Vagrant.configure("2") do |config|' )
+            f.puts( body )
+            f.puts( 'end' )
           end
+        rescue => e
+          raise Errors::WriteVagrantfileFailed, :error_message => e.message
         end
+        @logger.info "Wrote vagrantfile"
       end
 
       def write_disk

@@ -10,6 +10,10 @@ module VagrantMutate
         }
       end
 
+      def generate_vagrantfile
+        "  config.vm.base_mac = '#{@input_box.mac_address}'"
+      end
+
       def write_specific_files
         template_path = VagrantMutate.source_root.join('templates', 'kvm', 'box.xml.erb')
         template = File.read(template_path)
@@ -24,7 +28,7 @@ module VagrantMutate
         name = @input_box.name
         memory = @input_box.memory / 1024 # convert bytes to kib
         cpus = @input_box.cpus
-        mac = @input_box.mac_address
+        mac = format_mac( @input_box.mac_address )
         arch = @input_box.architecture
 
         qemu_bin = find_kvm
@@ -46,6 +50,11 @@ module VagrantMutate
           raise Errors::QemuNotFound
         end
         return qemu_bin
+      end
+
+      # convert to format with colons
+      def format_mac(mac)
+        mac.scan(/(.{2})/).join(':')
       end
 
     end

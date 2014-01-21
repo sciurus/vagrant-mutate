@@ -34,7 +34,7 @@ module VagrantMutate
 
         ovf.elements.each("//vbox:Machine/Hardware//Adapter") do |ele|
           if ele.attributes['enabled'] == 'true'
-            mac = format_mac( ele.attributes['MACAddress'] )
+            mac = ele.attributes['MACAddress']
             break
           end
         end
@@ -116,11 +116,6 @@ module VagrantMutate
         rescue => e
           raise Errors::BoxAttributeError, :error_message => e.message
         end
-      end
-
-      # convert to more standard format with colons
-      def format_mac(mac)
-        mac.scan(/(.{2})/).join(':')
       end
 
       # Takes a quantity and a unit

@@ -1,4 +1,5 @@
 require_relative 'box'
+require 'rexml/document'
 
 module VagrantMutate
   module Box
@@ -14,8 +15,18 @@ module VagrantMutate
       end
 
       # TODO implement these methods
-      # architecture, mac_address, cpus, memor, disk_interface
+      # architecture, mac_address, cpus, memory
       # to support converting to providers besides libvirt
+
+      def disk_interface
+        domain_file = File.join( @dir, 'box.xml' )
+        begin
+          domain = REXML::Document.new( File.read(domain_file) )
+          domain.elements['/domain/devices/disk/target'].attributes['bus']
+        rescue => e
+          raise Errors::BoxAttributeError, :error_message => e.message
+        end
+      end
 
     end
   end

@@ -34,11 +34,14 @@ end
 def derandomize_output(input, output_dir)
   if input == 'libvirt'
     if File.split(output_dir).last == 'kvm'
-      path = File.join(output_dir, 'box.xml')
-      contents = File.read(path)
-      contents.gsub!(/52:54:00:[0-9a-f:]+/, '52:54:00:cb:b2:80')
-      File.open(path, 'w') do |f|
-        f.write(contents)
+      ['box.xml', 'Vagrantfile'].each do |f|
+        path = File.join(output_dir, f)
+        contents = File.read(path)
+        contents.gsub!(/52:54:00:[0-9a-f:]+/, '52:54:00:cb:b2:80')
+        contents.gsub!(/525400[0-9a-f]+/, '525400cbb280')
+        File.open(path, 'w') do |f|
+          f.write(contents)
+        end
       end
     end
   end
