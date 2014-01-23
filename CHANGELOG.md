@@ -1,3 +1,7 @@
+# 0.2.4 (2014-01-23)
+* Generate new vagrantfiles instead of copying them
+* Set disk bus when converting to vagrant-libvirt (#41)
+
 # 0.2.3 (2014-01-20)
 * Warn when qemu version cannot read vmdk3 files (#29)
 * Fix errors in how box name and provider were parsed (#35)
