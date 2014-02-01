@@ -23,16 +23,10 @@
       <driver name='qemu' type='qcow2'/>
       <source file='box-disk1.img'/>
       <target dev='vda' bus='virtio'/>
-  
-      <address type='pci' domain='0x0000' bus='0x00' slot='0x06' function='0x0'/>
+
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x08' function='0x0'/>
+
     </disk>
-  
-    <controller type='usb' index='0'>
-      <address type='pci' domain='0x0000' bus='0x00' slot='0x01' function='0x2'/>
-    </controller>
-    <controller type='virtio-serial' index='0'>
-      <address type='pci' domain='0x0000' bus='0x00' slot='0x05' function='0x0'/>
-    </controller>
     <interface type='network'>
       <mac address='52:54:00:cb:b2:80'/>
       <source network='vagrant'/>
@@ -55,6 +49,18 @@
       <model type='cirrus' vram='9216' heads='1'/>
       <address type='pci' domain='0x0000' bus='0x00' slot='0x02' function='0x0'/>
     </video>
+    <controller type='ide' index='0'>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x01' function='0x1'/>
+    </controller>
+    <controller type='usb' index='0'>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x01' function='0x2'/>
+    </controller>
+    <controller type='virtio-serial' index='0'>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x05' function='0x0'/>
+    </controller>
+    <controller type='sata' index='0'>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x06' function='0x0'/>
+    </controller>
     <memballoon model='virtio'>
       <address type='pci' domain='0x0000' bus='0x00' slot='0x07' function='0x0'/>
     </memballoon>
