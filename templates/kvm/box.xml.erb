@@ -25,22 +25,12 @@
       <driver name='qemu' type='<%= image_type %>'/>
       <source file='<%= disk %>'/>
       <target dev='vda' bus='<%= disk_bus %>'/>
-  <% if disk_bus == 'virtio' %>
-      <address type='pci' domain='0x0000' bus='0x00' slot='0x06' function='0x0'/>
-    </disk>
-  <% else %>
+<% if disk_bus == 'virtio' %>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x08' function='0x0'/>
+<% else %>
       <address type='drive' controller='0' bus='0' target='0' unit='0'/>
+<% end %>
     </disk>
-    <controller type='<%= disk_bus %>' index='0'>
-      <address type='pci' domain='0x0000' bus='0x00' slot='0x06' function='0x0'/>
-    </controller>
-  <% end %>
-    <controller type='usb' index='0'>
-      <address type='pci' domain='0x0000' bus='0x00' slot='0x01' function='0x2'/>
-    </controller>
-    <controller type='virtio-serial' index='0'>
-      <address type='pci' domain='0x0000' bus='0x00' slot='0x05' function='0x0'/>
-    </controller>
     <interface type='network'>
       <mac address='<%= mac %>'/>
       <source network='vagrant'/>
@@ -63,6 +53,18 @@
       <model type='cirrus' vram='9216' heads='1'/>
       <address type='pci' domain='0x0000' bus='0x00' slot='0x02' function='0x0'/>
     </video>
+    <controller type='ide' index='0'>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x01' function='0x1'/>
+    </controller>
+    <controller type='usb' index='0'>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x01' function='0x2'/>
+    </controller>
+    <controller type='virtio-serial' index='0'>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x05' function='0x0'/>
+    </controller>
+    <controller type='sata' index='0'>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x06' function='0x0'/>
+    </controller>
     <memballoon model='virtio'>
       <address type='pci' domain='0x0000' bus='0x00' slot='0x07' function='0x0'/>
     </memballoon>
