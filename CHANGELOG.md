@@ -1,3 +1,6 @@
+# 0.2.5 (2014-02-01)
+* Fix pci id for drives in kvm (#39)
+
 # 0.2.4 (2014-01-23)
 * Generate new vagrantfiles instead of copying them
 * Set disk bus when converting to vagrant-libvirt (#41)
