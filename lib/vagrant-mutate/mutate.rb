@@ -7,8 +7,12 @@ module VagrantMutate
   class Mutate < Vagrant.plugin(2, :command)
 
     def execute
+      force=false
       opts = OptionParser.new do |o|
         o.banner = 'Usage: vagrant mutate <box-name-or-file> <provider>'
+        o.on("-f", "--force", "Force to convert even qemu-img version check failed") do |f|
+          force=true
+        end
       end
       argv = parse_options(opts)
       return if !argv
@@ -22,7 +26,7 @@ module VagrantMutate
       output_provider_arg = argv[1]
 
       Qemu.verify_qemu_installed
-      Qemu.verify_qemu_version(@env)
+      Qemu.verify_qemu_version(@env) unless force
 
       input_loader  = BoxLoader.new(@env)
       input_box = input_loader.load(box_arg)
