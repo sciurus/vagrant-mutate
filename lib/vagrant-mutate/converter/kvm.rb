@@ -44,6 +44,7 @@ module VagrantMutate
         qemu_bin_list = [ '/usr/bin/qemu-system-x86_64',
                           '/usr/bin/qemu-system-i386',
                           '/usr/bin/qemu-kvm',
+                          '/usr/libexec/qemu-kvm',
                           '/usr/bin/kvm' ]
         qemu_bin = qemu_bin_list.detect { |binary| File.exists? binary }
         unless qemu_bin
