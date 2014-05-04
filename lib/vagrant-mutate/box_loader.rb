@@ -129,8 +129,9 @@ module VagrantMutate
     end
 
     def create_output_dir(name, provider_name)
-      # e.g. $HOME/.vagrant.d/boxes/fedora-19/libvirt
-      out_dir = File.join( @env.boxes_path, name, provider_name )
+      # e.g. $HOME/.vagrant.d/boxes/fedora-19/0/libvirt
+      # TODO support versioned boxes
+      out_dir = File.join( @env.boxes_path, name, '0', provider_name )
       begin
         FileUtils.mkdir_p(out_dir)
       rescue => e
@@ -187,7 +188,8 @@ module VagrantMutate
     end
 
     def verify_input_dir(provider_name, name)
-      input_dir = File.join( @env.boxes_path, name, provider_name)
+      # TODO support versioned boxes
+      input_dir = File.join( @env.boxes_path, name, '0', provider_name)
       if File.directory?(input_dir)
         @logger.info "Found input directory #{input_dir}"
         return input_dir
@@ -197,7 +199,8 @@ module VagrantMutate
     end
 
     def find_input_dir(name)
-      box_parent_dir = File.join( @env.boxes_path, name)
+      # TODO support versioned boxes
+      box_parent_dir = File.join( @env.boxes_path, name, '0')
 
       if Dir.exist?(box_parent_dir)
         providers = Dir.entries(box_parent_dir).reject { |entry| entry =~ /^\./ }

@@ -61,7 +61,8 @@ def test(input, outputs)
   outputs.each do |output|
     puts "\nTESTING #{input} to #{output}"
     system("vagrant mutate #{input_box} #{output}")
-    output_dir = File.join(vagrant_dir, 'boxes', 'mutate-test', output)
+    # 0 because input boxes are unversioned
+    output_dir = File.join(vagrant_dir, 'boxes', 'mutate-test', '0', output)
     expected_output_dir = File.join(test_dir, 'expected_output', input, output)
     derandomize_output(input, output_dir)
     Dir.foreach(expected_output_dir) do |f|
