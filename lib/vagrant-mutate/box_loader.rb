@@ -25,13 +25,13 @@ module VagrantMutate
       end
     end
 
-    def load(box_arg)
+    def load(box_arg, provider_name)
       if box_arg =~ /:\/\//
         box = load_from_url(box_arg)
       elsif File.file?(box_arg)
         box = load_from_file(box_arg)
       else
-        box = load_from_boxes_path(box_arg)
+        box = load_from_boxes_path(box_arg, provider_name)
       end
 
       if box.supported_input
@@ -88,9 +88,8 @@ module VagrantMutate
       box = create_box(provider_name, name, dir)
     end
 
-    def load_from_boxes_path(identifier)
-      @logger.info "Loading box #{identifier} from vagrants box path"
-      provider_name, name = parse_identifier(identifier)
+    def load_from_boxes_path(name, provider_name)
+      @logger.info "Loading box #{name} from vagrants box path"
       if provider_name
         dir = verify_input_dir(provider_name, name)
       else
@@ -170,20 +169,6 @@ module VagrantMutate
       else
         @logger.info "No metadata found, so assuming input provider is virtualbox"
         return 'virtualbox'
-      end
-    end
-
-    def parse_identifier(identifier)
-      split_id = identifier.split('/')
-      case split_id.length
-      when 2
-        @logger.info "Parsed provider name as #{split_id[0]} and box name as #{split_id[1]}"
-        return split_id[0], split_id[1]
-      when 1
-        @logger.info "Parsed provider name as not given and box name as #{identifier}"
-        return nil, identifier
-      else
-          raise Errors::ParseIdentifierFailed, :identifier => identifier
       end
     end
 
