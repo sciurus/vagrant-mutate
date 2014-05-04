@@ -39,8 +39,8 @@ def derandomize_output(input, output_dir)
         contents = File.read(path)
         contents.gsub!(/52:54:00:[0-9a-f:]+/, '52:54:00:cb:b2:80')
         contents.gsub!(/525400[0-9a-f]+/, '525400cbb280')
-        File.open(path, 'w') do |f|
-          f.write(contents)
+        File.open(path, 'w') do |o|
+          o.write(contents)
         end
       end
     end
