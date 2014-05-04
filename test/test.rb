@@ -84,9 +84,9 @@ failures = test( 'virtualbox', ['kvm', 'libvirt'] )
 failures += test( 'libvirt', ['kvm'] )
 failures += test( 'kvm', ['libvirt'] )
 
-unless failures.empty?
+if failures.empty?
+  puts "\nALL TESTS PASSED"
+else
   puts "\nTESTS FAILED"
   failures.each {|f| puts f}
-else
-  puts "\nALL TESTS PASSED"
 end
