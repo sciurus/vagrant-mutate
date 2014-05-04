@@ -1,3 +1,6 @@
+# 0.2.6 (2014-05-04)
+* Include CentOS 6.5/RHEL 6.5-friendly Qemu paths (#50)
+
 # 0.2.5 (2014-02-01)
 * Fix pci id for drives in kvm (#39)
 
