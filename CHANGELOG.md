@@ -1,3 +1,9 @@
+# 0.3.0 (2014-05-04)
+* Support Vagrant 1.5 with unversioned boxes (#47)
+* Drop support for Vagrant < 1.5
+* Move input provider specifier into own option
+* Warn if user provided identifier for Vagrant Cloud
+
 # 0.2.6 (2014-05-04)
 * Include CentOS 6.5/RHEL 6.5-friendly Qemu paths (#50)
 

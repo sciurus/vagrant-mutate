@@ -11,13 +11,15 @@ Vagrant-mutate is a vagrant plugin to convert vagrant boxes to work with differe
 
 ## Compatibility
 
-Vagrant-mutate is not yet compatible with Vagrant 1.5.
+Vagrant-mutate 0.3 and later requires Vagrant 1.5. If you are using an older vagrant, install vagrant-mutate version 0.2.6.
 
-Vagrant-mutate has been tested against the following versions. It may work with other versions too.
+Throughout its development vagrant-mutate has been tested against the following versions. It may work with other versions too.
 
-* [vagrant](http://www.vagrantup.com) 1.3.5 and 1.4.3
+* [vagrant](http://www.vagrantup.com) 1.3.5, 1.4.3, and 1.5.4
 * [vagrant-kvm](https://github.com/adrahon/vagrant-kvm) 0.1.4
 * [vagrant-libvirt](https://github.com/pradels/vagrant-libvirt) 0.0.11
+
+Vagrant-mutate does not yet fully support [versioned boxes](http://docs.vagrantup.com/v2/boxes/versioning.html). It always assumes a box has the version *0*.
 
 ## Installation
 
@@ -67,12 +69,12 @@ Or if you had already added the box to vagrant and now want to use it with libvi
 
     vagrant mutate precise32 libvirt
 
-If you have a box for multiple providers, you must specify the provider to use for input by prepending it to the name with a slash, e.g.
+If you have a box for multiple providers, you must specify the provider to use for input using the *--input_provider* option, e.g.
 
     $ vagrant box list
     precise32  (kvm)
     precise32  (virtualbox)
-    $ vagrant mutate virtualbox/precise32 libvirt
+    $ vagrant mutate --input_provider=virtualbox precise32 libvirt
 
 To export a box you created with vagrant mutate, just repackage it, e.g.
 
