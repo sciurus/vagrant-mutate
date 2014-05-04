@@ -1,6 +1,8 @@
 en:
   vagrant_mutate:
     errors:
+      cloud_not_supported: |-
+          Vagrant-mutate can not download from Vagrant Cloud for you.
       providers_match: |-
         Input and output provider are the same. Aborting.
       provider_not_supported: |-

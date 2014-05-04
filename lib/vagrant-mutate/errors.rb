@@ -6,6 +6,10 @@ module VagrantMutate
       error_namespace('vagrant_mutate.errors')
     end
 
+    class CloudNotSupported < VagrantMutateError
+      error_key(:cloud_not_supported)
+    end
+
     class ProvidersMatch < VagrantMutateError
       error_key(:providers_match)
     end

@@ -30,6 +30,8 @@ module VagrantMutate
         box = load_from_url(box_arg)
       elsif File.file?(box_arg)
         box = load_from_file(box_arg)
+      elsif box_arg =~ /\//
+        raise Errors::CloudNotSupported
       else
         box = load_from_boxes_path(box_arg, provider_name)
       end
