@@ -142,7 +142,7 @@ module VagrantMutate
 
     def unpack(file)
       @env.ui.info "Extracting box file to a temporary directory."
-      unless File.exists? file
+      unless File.exist? file
         raise Errors::BoxNotFound, :box => file
       end
       tmp_dir = Dir.mktmpdir(nil, @env.tmp_path)
@@ -158,7 +158,7 @@ module VagrantMutate
 
     def determine_provider(dir)
       metadata_file = File.join(dir, 'metadata.json')
-      if File.exists? metadata_file
+      if File.exist? metadata_file
         begin
           metadata = JSON.load( File.new( metadata_file, 'r') )
         rescue => e

@@ -46,7 +46,7 @@ module VagrantMutate
                           '/usr/bin/qemu-kvm',
                           '/usr/libexec/qemu-kvm',
                           '/usr/bin/kvm' ]
-        qemu_bin = qemu_bin_list.detect { |binary| File.exists? binary }
+        qemu_bin = qemu_bin_list.detect { |binary| File.exist? binary }
         unless qemu_bin
           raise Errors::QemuNotFound
         end
