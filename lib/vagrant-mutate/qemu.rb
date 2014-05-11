@@ -22,9 +22,8 @@ module VagrantMutate
         usage = `qemu-img`
         if usage =~ /(\d+\.\d+\.\d+)/
           installed_version = Gem::Version.new($1)
-          # will need to change test once a version > 1.6 has a fix
-          if installed_version < Gem::Version.new('1.2.0') or
-              installed_version >= Gem::Version.new('1.6.0')
+          # less than 1.2 or equal to 1.6.x
+          if (installed_version < Gem::Version.new('1.2.0') or (installed_version >= Gem::Version.new('1.6.0') and installed_version < Gem::Version.new('1.7.0')))
 
             env.ui.warn "You have qemu #{installed_version} installed. "\
               "This version cannot read some virtualbox boxes. "\
