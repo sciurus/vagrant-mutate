@@ -11,9 +11,7 @@ Vagrant-mutate is a vagrant plugin to convert vagrant boxes to work with differe
 
 ## Compatibility
 
-Vagrant-mutate 0.3 and later requires Vagrant 1.5. If you are using an older vagrant, install vagrant-mutate version 0.2.6.
-
-Throughout its development vagrant-mutate has been tested against the following versions. It may work with other versions too.
+Throughout its development vagrant-mutate has been tested against the following versions. It may work with other versions too. Note that Vagrant-mutate 0.3 and later requires Vagrant 1.5. If you are using an older vagrant, install vagrant-mutate version 0.2.6.
 
 * [vagrant](http://www.vagrantup.com) 1.3.5, 1.4.3, and 1.5.4
 * [vagrant-kvm](https://github.com/adrahon/vagrant-kvm) 0.1.4
