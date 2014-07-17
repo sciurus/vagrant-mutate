@@ -11,7 +11,7 @@ module VagrantMutate
       options[:input_provider] = nil
 
       opts = OptionParser.new do |o|
-        o.banner = 'Usage: vagrant mutate <box-name-or-file> <provider>'
+        o.banner = 'Usage: vagrant mutate <box-name-or-file-or-url> <provider>'
         o.on("--input_provider PROVIDER",
           "Specify provider for input box") do |p|
           options[:input_provider] = p
