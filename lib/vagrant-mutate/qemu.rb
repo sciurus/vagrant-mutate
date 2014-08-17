@@ -19,7 +19,7 @@ module VagrantMutate
       end
 
       def self.verify_qemu_version(env)
-        usage = `qemu-img`
+        usage = `qemu-img --version`
         if usage =~ /(\d+\.\d+\.\d+)/
           installed_version = Gem::Version.new($1)
           # less than 1.2 or equal to 1.6.x
