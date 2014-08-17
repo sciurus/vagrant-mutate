@@ -1,3 +1,6 @@
+# 0.3.1 (2014-08-17)
+* Improve compatibility with newer qemu-img releases
+
 # 0.3.0 (2014-05-04)
 * Support Vagrant 1.5 with unversioned boxes (#47)
 * Drop support for Vagrant < 1.5
