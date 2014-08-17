@@ -10,6 +10,13 @@ def cleanup
   end
 end
 
+def ensure_pkg_dir
+  pkg_dir = File.expand_path('../../pkg', __FILE__)
+  if not Dir.exists? pkg_dir
+    Dir.mkdir pkg_dir
+  end
+end
+
 def build_plugin
   puts "\nBUILDING PLUGIN"
   pkg_dir = File.expand_path('../../pkg', __FILE__)
@@ -80,6 +87,7 @@ def test(input, outputs)
 end
 
 cleanup
+ensure_pkg_dir
 build_plugin
 failures = test( 'virtualbox', ['kvm', 'libvirt'] )
 failures += test( 'libvirt', ['kvm'] )
