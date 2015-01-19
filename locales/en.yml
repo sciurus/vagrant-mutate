@@ -8,7 +8,9 @@ en:
       provider_not_supported: |-
         Vagrant-mutate does not support %{provider} for %{direction}
       qemu_not_found: |-
-        Qemu-img was not found in your path
+        QEMU was not found in your path
+      qemu_img_not_found: |-
+        qemu-img was not found in your path
       box_not_found: |-
         The box %{box} was not found
       too_many_boxes_found: |-
