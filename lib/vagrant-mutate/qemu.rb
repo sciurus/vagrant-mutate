@@ -15,7 +15,7 @@ module VagrantMutate
           end
         end
         # if we make it here qemu-img command was not found
-        raise Errors::QemuNotFound
+        raise Errors::QemuImgNotFound
       end
 
       def self.verify_qemu_version(env)

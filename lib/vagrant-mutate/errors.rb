@@ -22,6 +22,10 @@ module VagrantMutate
       error_key(:qemu_not_found)
     end
 
+    class QemuImgNotFound < VagrantMutateError
+      error_key(:qemu_img_not_found)
+    end
+
     class BoxNotFound < VagrantMutateError
       error_key(:box_not_found)
     end
