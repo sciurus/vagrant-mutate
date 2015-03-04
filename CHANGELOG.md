@@ -1,3 +1,7 @@
+# 0.3.2 (2015-03-03)
+* Specify qcow compat instead of using default (#59)
+* Provide clearer error when qemu-img missing (#62)
+
 # 0.3.1 (2014-08-17)
 * Improve compatibility with newer qemu-img releases
 
