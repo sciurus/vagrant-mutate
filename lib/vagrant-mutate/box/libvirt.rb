@@ -4,7 +4,7 @@ module VagrantMutate
   module Box
     class Libvirt < Box
 
-      def initialize(env, name, dir)
+      def initialize(env, name, version, dir)
         super
         @provider_name    = 'libvirt'
         @supported_input  = true

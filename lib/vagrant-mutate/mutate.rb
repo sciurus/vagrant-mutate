@@ -9,12 +9,17 @@ module VagrantMutate
     def execute
       options = {}
       options[:input_provider] = nil
+      options[:version] = nil
 
       opts = OptionParser.new do |o|
         o.banner = 'Usage: vagrant mutate <box-name-or-file-or-url> <provider>'
         o.on("--input_provider PROVIDER",
           "Specify provider for input box") do |p|
           options[:input_provider] = p
+        end
+        o.on("--version VERSION",
+          "Specify version for input box") do |p|
+          options[:version] = p
         end
       end
 
@@ -33,10 +38,10 @@ module VagrantMutate
       Qemu.verify_qemu_version(@env)
 
       input_loader  = BoxLoader.new(@env)
-      input_box = input_loader.load( options[:box_arg], options[:input_provider] )
+      input_box = input_loader.load( options[:box_arg], options[:input_provider], options[:version] )
 
       output_loader = BoxLoader.new(@env)
-      output_box = output_loader.prepare_for_output( input_box.name, options[:output_provider])
+      output_box = output_loader.prepare_for_output( input_box.name, options[:output_provider], input_box.version)
 
       converter  = Converter::Converter.create(@env, input_box, output_box)
       converter.convert

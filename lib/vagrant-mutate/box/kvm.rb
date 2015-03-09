@@ -5,7 +5,7 @@ module VagrantMutate
   module Box
     class Kvm < Box
 
-      def initialize(env, name, dir)
+      def initialize(env, name, version, dir)
         super
         @provider_name    = 'kvm'
         @supported_input  = true
