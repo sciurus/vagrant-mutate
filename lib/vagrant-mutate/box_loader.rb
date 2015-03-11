@@ -91,7 +91,7 @@ module VagrantMutate
       provider_name = determine_provider(dir)
       #version = determine_version(dir)
 
-      box = create_box(provider_name, name, version, dir)
+      return box = create_box(provider_name, name, version, dir)
     end
 
     def load_from_file(file)
@@ -102,11 +102,11 @@ module VagrantMutate
       provider_name = determine_provider(dir)
       version = determine_version(dir)
 
-      box = create_box(provider_name, name, version, dir)
+      return box = create_box(provider_name, name, version, dir)
     end
 
     def load_from_boxes_path(name, provider_name, input_version)
-      @logger.info "Loading box #{name} from vagrants box path using provider #{provider_name} and version #{version}."
+      @logger.info "Loading box #{name} from vagrants box path using provider #{provider_name} and version #{input_version}."
       safe_name = sanitize_name(name)
       if provider_name
         @logger.info "Checking directory for provider #{provider_name}."
@@ -124,7 +124,7 @@ module VagrantMutate
         provider_name, version, dir = find_input_dir(safe_name)
       end
       @logger.info "Creating #{name} box using provider #{provider_name} with version #{version} in #{dir}."
-      box = create_box(provider_name, name, version, dir)
+      return box = create_box(provider_name, name, version, dir)
     end
 
     def cleanup
@@ -275,12 +275,15 @@ module VagrantMutate
 
       # Handle multiple metadata versions or no versions at-all
       if metadata.versions.length > 1 
-        @loger.info "Got multiple versions from metadata, finding active version"
-        metadata.versions.each do |metadata_version|
-          # Only interested in 'active' box...
-          next unless metadata_version['state'] == 'active' 
-          version = metadata_version
-        end
+        @logger.info "Got multiple versions from metadata, picking max value"
+        version = metadata.versions.max
+        # version = metadata.versions.each do |metadata_version|
+        #   # Only interested in 'active' box...
+        #   next unless metadata_version['state'] == 'active' 
+        #   version = metadata_version
+        #   @logger.info "Got version #{version}"
+        #   break version
+        # end
       elsif metadata.versions.empty?
         @logger.info "Got no versions from metadata, assuming version '0'"
         version = '0'
@@ -323,7 +326,7 @@ module VagrantMutate
           message: e.extra_data[:message]
       ensure
         tf.unlink if tf
-      end
+    end
 
     def sanitize_name(name)
       if name =~ /\// 
