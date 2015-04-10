@@ -268,64 +268,24 @@ module VagrantMutate
     end
 
     def get_version(name)
-      # Need to download the metadata
-      metadata = download_metadata(name)
-      @logger.info "Metadata loaded... #{metadata}"
-      @logger.info "Versions = #{metadata.versions}."
+      # Get a list of directories for this box 
+      @logger.info "Getting versions for #{name}."
 
-      # Handle multiple metadata versions or no versions at-all
-      if metadata.versions.length > 1 
-        @logger.info "Got multiple versions from metadata, picking max value"
-        version = metadata.versions.max
-        # version = metadata.versions.each do |metadata_version|
-        #   # Only interested in 'active' box...
-        #   next unless metadata_version['state'] == 'active' 
-        #   version = metadata_version
-        #   @logger.info "Got version #{version}"
-        #   break version
-        # end
-      elsif metadata.versions.empty?
-        @logger.info "Got no versions from metadata, assuming version '0'"
-        version = '0'
-      else
-        @logger.info "Pulling first version entry as it's the only one"
-        version = metadata.versions.first
+      box_dir = File.join( @env.boxes_path, name, "*" )
+      possible_versions = Dir.glob(box_dir).select { |f| File.directory? f }.collect {|x| x.split('/').last}
+
+      @logger.info "Possible_versions = #{possible_versions.inspect}"
+
+      if possible_versions.length > 1
+        @logger.info "Got multiple possible versions, selecting max value"
+        version = possible_versions.max
+      else 
+        @logger.info "Got a single version, so returning it"
+        version = possible_versions.first
       end
-    
-      @logger.info "Returning version #{version}"
+
+      @logger.info "Found version #{version}"
       return version
-    end
-
-    def download_metadata(name)
-      metadata_file = File.join( @env.boxes_path, name, 'metadata_url' )
-      if !File.exists?(metadata_file)
-        @logger.info "Metadata_file not found at #{metadata_file}."
-        raise Errors::MetadataNotFound, :box => name
-      end
-      @logger.info "Found a metadata_file at #{metadata_file}."
-      metadata_url = File.read(metadata_file)
-      @logger.info "Metadata_url = #{metadata_url}"
-
-      tf = Tempfile.new("vagrant")
-      tf.close
-
-      url = metadata_url
-      if File.file?(url) || url !~ /^[a-z0-9]+:.*$/i
-        url = File.expand_path(url)
-        url = Vagrant::Util::Platform.cygwin_windows_path(url)
-        url = "file:#{url}"
-      end
-
-      # Download the metadata JSON file from url
-      opts = { headers: ["Accept: application/json"] }
-      Vagrant::Util::Downloader.new(url, tf.path, **opts).download!
-      # Load the Metadata into a BoxMetadata object
-      Vagrant::BoxMetadata.new(File.open(tf.path, "r"))
-      rescue Vagrant::Errors::DownloaderError => e
-        raise Vagrant::Errors::BoxMetadataDownloadError,
-          message: e.extra_data[:message]
-      ensure
-        tf.unlink if tf
     end
 
     def sanitize_name(name)
