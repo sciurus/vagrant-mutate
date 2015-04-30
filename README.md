@@ -19,21 +19,21 @@ Throughout its development vagrant-mutate has been tested against the following 
 
 ## Installation
 
-### qemu-img
+### qemu-img and libvirt development
 
-First, you must install [qemu-img](http://wiki.qemu.org/Main_Page). Information on supported versions is listed at [QEMU Version Compatibility](https://github.com/sciurus/vagrant-mutate/wiki/QEMU-Version-Compatibility).
+First, you must install [qemu-img](http://wiki.qemu.org/Main_Page) and the libvirt development libraries. Information on supported versions is listed at [QEMU Version Compatibility](https://github.com/sciurus/vagrant-mutate/wiki/QEMU-Version-Compatibility).
 
 #### Debian and derivatives
 
-    apt-get install qemu-utils
+    apt-get install qemu-utils libvirt-dev
 
 #### Red Hat and derivatives
 
-    yum install qemu-img
+    yum install qemu-img libvirt-devel
 
 #### OS X
 
-QEMU is available from [homebrew](http://brew.sh/)
+QEMU and libvirt are available from [homebrew](http://brew.sh/)
 
 #### Windows
 
