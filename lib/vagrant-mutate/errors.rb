@@ -6,10 +6,6 @@ module VagrantMutate
       error_namespace('vagrant_mutate.errors')
     end
 
-    class CloudNotSupported < VagrantMutateError
-      error_key(:cloud_not_supported)
-    end
-
     class ProvidersMatch < VagrantMutateError
       error_key(:providers_match)
     end
@@ -46,6 +42,10 @@ module VagrantMutate
       error_key(:determine_provider_failed)
     end
 
+    class LoadMetadataFailed < VagrantMutateError
+      error_key(:load_metadata_failed)
+    end
+
     class CreateBoxDirFailed < VagrantMutateError
       error_key(:create_box_dir_failed)
     end
@@ -78,5 +78,8 @@ module VagrantMutate
       error_key(:url_error)
     end
 
+    class MetadataNotFound < VagrantMutateError
+      error_key(:metadata_not_found)
+    end
   end
 end

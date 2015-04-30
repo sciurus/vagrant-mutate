@@ -1,8 +1,6 @@
 en:
   vagrant_mutate:
     errors:
-      cloud_not_supported: |-
-          Vagrant-mutate can not download from Vagrant Cloud for you.
       providers_match: |-
         Input and output provider are the same. Aborting.
       provider_not_supported: |-
@@ -23,6 +21,9 @@ en:
         If you meant to specify a box by name fix this. If you meant to specify a box by path make sure the file exists.
       determine_provider_failed: |-
         Determining provider for box failed with error:
+        %{error_message}
+      load_metadata_failed: |-
+        Loading metadata for box failed with error:
         %{error_message}
       create_box_dir_failed: |-
         Creating directory for box failed with error:
@@ -45,3 +46,5 @@ en:
         %{error_message}
       url_error: |-
           The url %{url} is not valid
+      metadata_not_found: |-
+        Unable to find metadata file for %{box}

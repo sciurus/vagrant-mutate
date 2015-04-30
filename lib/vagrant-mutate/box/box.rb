@@ -2,13 +2,14 @@ module VagrantMutate
   module Box
     class Box
 
-      attr_reader :name, :dir, :provider_name, :supported_input, :supported_output, :image_format, :image_name
+      attr_reader :name, :dir, :version, :provider_name, :supported_input, :supported_output, :image_format, :image_name
 
-      def initialize(env, name, dir)
-        @env = env
-        @name = name
-        @dir = dir
-        @logger = Log4r::Logger.new('vagrant::mutate')
+      def initialize(env, name, version, dir)
+        @env     = env
+        @name    = name
+        @dir     = dir
+        @version = version
+        @logger  = Log4r::Logger.new('vagrant::mutate')
       end
 
       def virtual_size

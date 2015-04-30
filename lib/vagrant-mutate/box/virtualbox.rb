@@ -5,9 +5,9 @@ module VagrantMutate
   module Box
     class Virtualbox < Box
 
-      def initialize(env, name, dir)
+      def initialize(env, name, version, dir)
         super
-        @provider_name     = 'virtualbox'
+        @provider_name    = 'virtualbox'
         @supported_input  = true
         @supported_output = false
         @image_format     = 'vmdk'
