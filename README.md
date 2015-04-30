@@ -67,7 +67,7 @@ Or if you had already added the box to vagrant and now want to use it with libvi
 
     vagrant mutate precise32 libvirt
 
-If you have a box for multiple providers, you must specify the provider to use for input using the *--input_provider* option, e.g.
+If you have a box for multiple providers, you must specify the provider to use for input using the *--input-provider* option, e.g.
 
     $ vagrant box list
     precise32  (kvm)
