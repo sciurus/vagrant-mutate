@@ -17,8 +17,6 @@ Throughout its development vagrant-mutate has been tested against the following 
 * [vagrant-kvm](https://github.com/adrahon/vagrant-kvm) 0.1.4
 * [vagrant-libvirt](https://github.com/pradels/vagrant-libvirt) 0.0.11
 
-Vagrant-mutate does not yet fully support [versioned boxes](http://docs.vagrantup.com/v2/boxes/versioning.html). It always assumes a box has the version *0*.
-
 ## Installation
 
 ### qemu-img
@@ -66,6 +64,12 @@ Or if you had already downloaded it
 Or if you had already added the box to vagrant and now want to use it with libvirt
 
     vagrant mutate precise32 libvirt
+
+The latter syntax works for boxes you added from Vagrant Cloud or Atlas too. If you have installed multiple versions of these boxes, vagrant-mutate will always use the latest one.
+
+    $ vagrant box list
+    hashicorp/precise64  (virtualbox, 1.1.0)
+    $ vagrant mutate hashicorp/precise32 libvirt
 
 If you have a box for multiple providers, you must specify the provider to use for input using the *--input-provider* option, e.g.
 
