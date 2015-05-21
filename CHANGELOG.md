@@ -1,3 +1,9 @@
+# 1.0.0 (2015-05-20)
+* Support versioned boxes (#51)
+* Support boxes with slash in name (#52)
+* Rename input provider option (#68)
+* Allow hyphen in box name when loading from url (#70)
+
 # 0.3.2 (2015-03-03)
 * Specify qcow compat instead of using default (#59)
 * Provide clearer error when qemu-img missing (#62)
