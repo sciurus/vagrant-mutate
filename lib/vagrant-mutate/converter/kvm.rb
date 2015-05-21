@@ -4,9 +4,7 @@ module VagrantMutate
   module Converter
     class Kvm < Converter
       def generate_metadata
-        metadata = {
-          'provider' => @output_box.provider_name,
-        }
+        { 'provider' => @output_box.provider_name }
       end
 
       def generate_vagrantfile

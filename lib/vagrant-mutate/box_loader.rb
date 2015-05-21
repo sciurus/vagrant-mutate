@@ -86,7 +86,7 @@ module VagrantMutate
       dir = unpack(download_path)
       provider_name = determine_provider(dir)
 
-      box = create_box(provider_name, name, version, dir)
+      create_box(provider_name, name, version, dir)
     end
 
     def load_from_file(file)
@@ -97,7 +97,7 @@ module VagrantMutate
       provider_name = determine_provider(dir)
       version = determine_version(dir)
 
-      box = create_box(provider_name, name, version, dir)
+      create_box(provider_name, name, version, dir)
     end
 
     def load_from_boxes_path(name, provider_name, input_version)
@@ -119,7 +119,7 @@ module VagrantMutate
         provider_name, version, dir = find_input_dir(safe_name)
       end
       @logger.info "Creating #{name} box using provider #{provider_name} with version #{version} in #{dir}."
-      box = create_box(provider_name, name, version, dir)
+      create_box(provider_name, name, version, dir)
     end
 
     def cleanup
