@@ -12,7 +12,7 @@ end
 
 def ensure_pkg_dir
   pkg_dir = File.expand_path('../../pkg', __FILE__)
-  if not Dir.exists? pkg_dir
+  unless Dir.exist? pkg_dir
     Dir.mkdir pkg_dir
   end
 end
@@ -22,7 +22,7 @@ def build_plugin
   pkg_dir = File.expand_path('../../pkg', __FILE__)
   working_dir = Dir.pwd
   Dir.chdir pkg_dir
-  FileUtils.rm( Dir.glob('*.gem') )
+  FileUtils.rm(Dir.glob('*.gem'))
   system('rake build')
   Dir.chdir working_dir
 end
@@ -56,7 +56,7 @@ end
 
 def test(input, outputs)
   failures = []
-  test_dir = File.expand_path( File.dirname(__FILE__) )
+  test_dir = File.expand_path(File.dirname(__FILE__))
 
   input_box = File.join(test_dir, 'input', input, 'mutate-test.box')
 
@@ -83,19 +83,19 @@ def test(input, outputs)
     end
   end
 
-  return failures
+  failures
 end
 
 cleanup
 ensure_pkg_dir
 build_plugin
-failures = test( 'virtualbox', ['kvm', 'libvirt'] )
-failures += test( 'libvirt', ['kvm'] )
-failures += test( 'kvm', ['libvirt'] )
+failures = test('virtualbox', %w(kvm libvirt))
+failures += test('libvirt', ['kvm'])
+failures += test('kvm', ['libvirt'])
 
 if failures.empty?
   puts "\nALL TESTS PASSED"
 else
   puts "\nTESTS FAILED"
-  failures.each {|f| puts f}
+  failures.each { |f| puts f }
 end

@@ -4,7 +4,6 @@ require 'rexml/document'
 module VagrantMutate
   module Box
     class Kvm < Box
-
       def initialize(env, name, version, dir)
         super
         @provider_name    = 'kvm'
@@ -19,15 +18,14 @@ module VagrantMutate
       # to support converting to providers besides libvirt
 
       def disk_interface
-        domain_file = File.join( @dir, 'box.xml' )
+        domain_file = File.join(@dir, 'box.xml')
         begin
-          domain = REXML::Document.new( File.read(domain_file) )
+          domain = REXML::Document.new(File.read(domain_file))
           domain.elements['/domain/devices/disk/target'].attributes['bus']
         rescue => e
-          raise Errors::BoxAttributeError, :error_message => e.message
+          raise Errors::BoxAttributeError, error_message: e.message
         end
       end
-
     end
   end
 end

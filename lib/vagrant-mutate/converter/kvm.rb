@@ -3,7 +3,6 @@ require 'erb'
 module VagrantMutate
   module Converter
     class Kvm < Converter
-
       def generate_metadata
         metadata = {
           'provider' => @output_box.provider_name,
@@ -28,36 +27,35 @@ module VagrantMutate
         name = @input_box.name
         memory = @input_box.memory / 1024 # convert bytes to kib
         cpus = @input_box.cpus
-        mac = format_mac( @input_box.mac_address )
+        mac = format_mac(@input_box.mac_address)
         arch = @input_box.architecture
 
         qemu_bin = find_kvm
 
-        File.open( File.join( @output_box.dir, 'box.xml'), 'w') do |f|
-          f.write( ERB.new(template).result(binding) )
+        File.open(File.join(@output_box.dir, 'box.xml'), 'w') do |f|
+          f.write(ERB.new(template).result(binding))
         end
       end
 
       private
 
       def find_kvm
-        qemu_bin_list = [ '/usr/bin/qemu-system-x86_64',
-                          '/usr/bin/qemu-system-i386',
-                          '/usr/bin/qemu-kvm',
-                          '/usr/libexec/qemu-kvm',
-                          '/usr/bin/kvm' ]
-        qemu_bin = qemu_bin_list.detect { |binary| File.exist? binary }
+        qemu_bin_list = ['/usr/bin/qemu-system-x86_64',
+                         '/usr/bin/qemu-system-i386',
+                         '/usr/bin/qemu-kvm',
+                         '/usr/libexec/qemu-kvm',
+                         '/usr/bin/kvm']
+        qemu_bin = qemu_bin_list.find { |binary| File.exist? binary }
         unless qemu_bin
-          raise Errors::QemuNotFound
+          fail Errors::QemuNotFound
         end
-        return qemu_bin
+        qemu_bin
       end
 
       # convert to format with colons
       def format_mac(mac)
         mac.scan(/(.{2})/).join(':')
       end
-
     end
   end
 end
