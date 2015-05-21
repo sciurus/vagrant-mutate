@@ -88,7 +88,6 @@ module VagrantMutate
       def convert_disk
         input_file    = File.join(@input_box.dir, @input_box.image_name)
         output_file   = File.join(@output_box.dir, @output_box.image_name)
-        input_format  = @input_box.image_format
         output_format = @output_box.image_format
 
         # p for progress bar
