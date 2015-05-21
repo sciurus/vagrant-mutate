@@ -13,9 +13,9 @@ module VagrantMutate
         @image_name       = 'box-disk1.img'
       end
 
-      # TODO implement these methods
-      # architecture, mac_address, cpus, memory
-      # to support converting to providers besides libvirt
+      # TODO: implement these methods
+      #  architecture, mac_address, cpus, memory
+      #  to support converting to providers besides libvirt
 
       def disk_interface
         domain_file = File.join(@dir, 'box.xml')
