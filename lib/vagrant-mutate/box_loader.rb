@@ -32,9 +32,6 @@ module VagrantMutate
         box = load_from_url(box_arg)
       elsif File.file?(box_arg)
         box = load_from_file(box_arg)
-      # elsif box_arg =~ /\//
-      # TODO: Support pulling boxes from VagrantCloud?
-      #  raise Errors::CloudNotSupported
       else
         box = load_from_boxes_path(box_arg, provider_name, input_version)
       end
@@ -88,7 +85,6 @@ module VagrantMutate
 
       dir = unpack(download_path)
       provider_name = determine_provider(dir)
-      # version = determine_version(dir)
 
       box = create_box(provider_name, name, version, dir)
     end
