@@ -1,3 +1,6 @@
+# 1.0.1 (2015-08-16)
+* Throw error during version search when missing box (#72)
+
 # 1.0.0 (2015-05-20)
 * Support versioned boxes (#51)
 * Support boxes with slash in name (#52)
