@@ -274,9 +274,11 @@ module VagrantMutate
       if possible_versions.length > 1
         @logger.info 'Got multiple possible versions, selecting max value'
         version = possible_versions.max
-      else
+      elsif possible_versions.length == 1
         @logger.info 'Got a single version, so returning it'
         version = possible_versions.first
+      else
+        fail Errors::BoxNotFound, box: name
       end
 
       @logger.info "Found version #{version}"
