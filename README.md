@@ -29,7 +29,7 @@ First, you must install [qemu-img](http://wiki.qemu.org/Main_Page) and the libvi
 
 #### Red Hat and derivatives
 
-    yum install qemu-img libvirt-devel
+    yum install qemu-img libvirt-devel ruby-libvirt
 
 #### OS X
 
