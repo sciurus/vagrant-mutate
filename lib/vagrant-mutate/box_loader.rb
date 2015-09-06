@@ -56,7 +56,7 @@ module VagrantMutate
       # if it ends in .box remove that extension
       # if not just remove leading slash
       name = nil
-      if url.path =~ /([-\w]+).box$/
+      if url.path =~ /([-.\w]+).box$/
         name = Regexp.last_match[1]
       else
         name = url.path.sub(/^\//, '')
