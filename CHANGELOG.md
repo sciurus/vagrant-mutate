@@ -1,3 +1,6 @@
+# 1.0.2 (2015-09-06)
+* Allow period in box name when loading from URL (#75)
+
 # 1.0.1 (2015-08-16)
 * Throw error during version search when missing box (#72)
 
