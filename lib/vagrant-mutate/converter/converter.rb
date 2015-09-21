@@ -93,8 +93,12 @@ module VagrantMutate
         # p for progress bar
         # S for sparse file
         qemu_options = '-p -S 16k'
+        qemu_version = Qemu.qemu_version()
+        if qemu_version >= Gem::Version.new('1.1.0')
+          qemu_options += ' -o compat=1.1'
+        end
 
-        command = "qemu-img convert #{qemu_options} -O #{output_format} -o compat=1.1 #{input_file} #{output_file}"
+        command = "qemu-img convert #{qemu_options} -O #{output_format} #{input_file} #{output_file}"
         @logger.info "Running #{command}"
         unless system(command)
           fail Errors::WriteDiskFailed, error_message: "qemu-img exited with status #{$CHILD_STATUS.exitstatus}"
