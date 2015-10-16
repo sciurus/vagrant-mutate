@@ -1,3 +1,6 @@
+# 1.0.3 (2015-10-15)
+* Fix compatibility with qemu version in EL6 (#76)
+
 # 1.0.2 (2015-09-06)
 * Allow period in box name when loading from URL (#75)
 
