@@ -1,3 +1,6 @@
+# 1.0.4 (2016-01-01)
+* Support spaces in box names (#79)
+
 # 1.0.3 (2015-10-15)
 * Fix compatibility with qemu version in EL6 (#76)
 
