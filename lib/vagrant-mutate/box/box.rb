@@ -1,3 +1,5 @@
+require 'shellwords'
+
 module VagrantMutate
   module Box
     class Box
@@ -24,7 +26,7 @@ module VagrantMutate
       end
 
       def extract_from_qemu_info(expression)
-        input_file = File.join(@dir, image_name)
+        input_file = File.join(@dir, image_name).shellescape
         info = `qemu-img info #{input_file}`
         @logger.debug "qemu-img info output\n#{info}"
         if info =~ expression

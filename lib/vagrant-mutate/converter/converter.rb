@@ -1,4 +1,5 @@
 require 'fileutils'
+require 'shellwords'
 
 module VagrantMutate
   module Converter
@@ -86,8 +87,8 @@ module VagrantMutate
       end
 
       def convert_disk
-        input_file    = File.join(@input_box.dir, @input_box.image_name)
-        output_file   = File.join(@output_box.dir, @output_box.image_name)
+        input_file    = File.join(@input_box.dir, @input_box.image_name).shellescape
+        output_file   = File.join(@output_box.dir, @output_box.image_name).shellescape
         output_format = @output_box.image_format
 
         # p for progress bar
