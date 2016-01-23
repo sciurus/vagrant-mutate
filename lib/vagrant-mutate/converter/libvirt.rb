@@ -12,7 +12,7 @@ module VagrantMutate
       def generate_vagrantfile
         <<-EOF
         config.vm.provider :libvirt do |libvirt|
-          libvirt.disk_bus = '#{@input_box.disk_interface}'
+          libvirt.disk_bus = '#{@output_box.disk_interface}'
         end
         EOF
       end
