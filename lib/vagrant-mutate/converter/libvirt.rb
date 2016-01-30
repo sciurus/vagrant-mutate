@@ -10,11 +10,22 @@ module VagrantMutate
       end
 
       def generate_vagrantfile
-        <<-EOF
-        config.vm.provider :libvirt do |libvirt|
-          libvirt.disk_bus = '#{@input_box.disk_interface}'
+
+        if @output_box.force_virtio == true
+          <<-EOF
+          config.vm.provider :libvirt do |libvirt|
+            libvirt.disk_bus = '#{@output_box.disk_interface}'
+          end
+          EOF
+        else 
+          <<-EOF
+
+          config.vm.provider :libvirt do |libvirt|
+            libvirt.disk_bus = '#{@input_box.disk_interface}'
+          end
+          EOF
         end
-        EOF
+
       end
 
       def write_specific_files
