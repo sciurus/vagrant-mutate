@@ -14,11 +14,11 @@ module VagrantMutate
       @tmp_files = []
     end
 
-    def prepare_for_output(name, provider_name, version)
+    def prepare_for_output(name, provider_name, version, force_virtio='false')
       @logger.info "Preparing #{name} for output as #{provider_name} with version #{version}."
       safe_name = sanitize_name(name)
       dir = create_output_dir(safe_name, provider_name, version)
-      box = create_box(provider_name, name, version, dir)
+      box = create_box(provider_name, name, version, dir, force_virtio)
 
       if box.supported_output
         return box
@@ -134,7 +134,7 @@ module VagrantMutate
 
     private
 
-    def create_box(provider_name, name, version, dir)
+    def create_box(provider_name, name, version, dir, force_virtio='false')
       @logger.info "Creating box #{name} with provider #{provider_name} and version #{version} in #{dir}"
       case provider_name
       when 'kvm'
@@ -142,7 +142,7 @@ module VagrantMutate
         Box::Kvm.new(@env, name, version, dir)
       when 'libvirt'
         require_relative 'box/libvirt'
-        Box::Libvirt.new(@env, name, version, dir)
+        Box::Libvirt.new(@env, name, version, dir, force_virtio)
       when 'virtualbox'
         require_relative 'box/virtualbox'
         Box::Virtualbox.new(@env, name, version, dir)

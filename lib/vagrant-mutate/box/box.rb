@@ -5,7 +5,7 @@ module VagrantMutate
     class Box
       attr_reader :name, :dir, :version, :provider_name, :supported_input, :supported_output, :image_format, :image_name
 
-      def initialize(env, name, version, dir)
+      def initialize(env, name, version, dir, force_virtio='false')
         @env     = env
         @name    = name
         @dir     = dir

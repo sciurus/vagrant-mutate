@@ -3,7 +3,7 @@ require_relative 'box'
 module VagrantMutate
   module Box
     class Libvirt < Box
-      def initialize(env, name, version, dir)
+      def initialize(env, name, version, dir, force_virtio)
         super
         @provider_name    = 'libvirt'
         @supported_input  = true
@@ -11,6 +11,7 @@ module VagrantMutate
         @image_format     = 'qcow2'
         @image_name       = 'box.img'
         @mac              = nil
+        @force_virtio     = force_virtio
       end
 
       # since none of below can be determined from the box
@@ -40,6 +41,11 @@ module VagrantMutate
       def disk_interface
         'virtio'
       end
+
+      def force_virtio
+        @force_virtio
+      end
+
     end
   end
 end
