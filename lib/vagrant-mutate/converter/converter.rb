@@ -12,7 +12,6 @@ module VagrantMutate
           Kvm.new(env, input_box, output_box)
         when 'libvirt'
           require_relative 'libvirt'
-          #Libvirt.new(env, input_box, output_box)
           Libvirt.new(env, input_box, output_box, force_virtio)
         else
           fail Errors::ProviderNotSupported, provider: output_box.provider_name, direction: 'output'
