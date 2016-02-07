@@ -1,7 +1,6 @@
 module VagrantMutate
   module Converter
     class Libvirt < Converter
-    attr :force_virtio, false
 
       def generate_metadata
         {

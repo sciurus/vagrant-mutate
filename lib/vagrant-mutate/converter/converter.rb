@@ -4,7 +4,6 @@ require 'shellwords'
 module VagrantMutate
   module Converter
     class Converter
-      #def self.create(env, input_box, output_box)
       def self.create(env, input_box, output_box, force_virtio='false')
       case output_box.provider_name
         when 'kvm'
