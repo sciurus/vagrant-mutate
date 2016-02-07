@@ -4,23 +4,25 @@ require 'shellwords'
 module VagrantMutate
   module Converter
     class Converter
-      def self.create(env, input_box, output_box)
-        case output_box.provider_name
+      #def self.create(env, input_box, output_box)
+      def self.create(env, input_box, output_box, force_virtio='false')
+      case output_box.provider_name
         when 'kvm'
           require_relative 'kvm'
           Kvm.new(env, input_box, output_box)
         when 'libvirt'
           require_relative 'libvirt'
-          Libvirt.new(env, input_box, output_box)
+          Libvirt.new(env, input_box, output_box, force_virtio)
         else
           fail Errors::ProviderNotSupported, provider: output_box.provider_name, direction: 'output'
         end
       end
 
-      def initialize(env, input_box, output_box)
+      def initialize(env, input_box, output_box, force_virtio='false')
         @env = env
         @input_box  = input_box
         @output_box = output_box
+        @force_virtio = force_virtio
         @logger = Log4r::Logger.new('vagrant::mutate')
       end
 

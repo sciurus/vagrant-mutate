@@ -19,12 +19,17 @@ module VagrantMutate
              'Specify version for input box') do |p|
           options[:version] = p
         end
+        # check for optional argument to force virtio disk driver in Vagrantfile (for libvirt)
+        o.on('--force-virtio',
+             'Force virtio disk driver in Vagrantfile for libvirt output provider') do |p|
+          options[:force_virtio] = true
+        end
       end
 
       argv = parse_options(opts)
       return unless argv
 
-      unless argv.length == 2
+      unless argv.length >= 2
         @env.ui.info(opts.help)
         return
       end
@@ -41,7 +46,12 @@ module VagrantMutate
       output_loader = BoxLoader.new(@env)
       output_box = output_loader.prepare_for_output(input_box.name, options[:output_provider], input_box.version)
 
-      converter  = Converter::Converter.create(@env, input_box, output_box)
+      if options[:force_virtio] == true 
+        converter  = Converter::Converter.create(@env, input_box, output_box, options[:force_virtio])
+      else
+        converter  = Converter::Converter.create(@env, input_box, output_box)
+      end
+
       converter.convert
 
       input_loader.cleanup
