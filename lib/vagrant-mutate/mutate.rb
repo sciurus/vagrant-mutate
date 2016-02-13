@@ -8,6 +8,7 @@ module VagrantMutate
       options = {}
       options[:input_provider] = nil
       options[:version] = nil
+      options[:force_virtio] = false
 
       opts = OptionParser.new do |o|
         o.banner = 'Usage: vagrant mutate <box-name-or-file-or-url> <provider>'
@@ -29,7 +30,7 @@ module VagrantMutate
       argv = parse_options(opts)
       return unless argv
 
-      unless argv.length >= 2
+      unless argv.length == 2
         @env.ui.info(opts.help)
         return
       end
@@ -46,12 +47,7 @@ module VagrantMutate
       output_loader = BoxLoader.new(@env)
       output_box = output_loader.prepare_for_output(input_box.name, options[:output_provider], input_box.version)
 
-      if options[:force_virtio] == true 
-        converter  = Converter::Converter.create(@env, input_box, output_box, options[:force_virtio])
-      else
-        converter  = Converter::Converter.create(@env, input_box, output_box)
-      end
-
+      converter  = Converter::Converter.create(@env, input_box, output_box, options[:force_virtio])
       converter.convert
 
       input_loader.cleanup
