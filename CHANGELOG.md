@@ -1,3 +1,6 @@
+# 1.1.1 (2016-02-24)
+* Add option to force use of virtio for disks (#82)
+
 # 1.0.4 (2016-01-01)
 * Support spaces in box names (#79)
 
