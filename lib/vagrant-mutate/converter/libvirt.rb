@@ -1,6 +1,7 @@
 module VagrantMutate
   module Converter
     class Libvirt < Converter
+
       def generate_metadata
         {
           'provider' => @output_box.provider_name,
@@ -10,9 +11,16 @@ module VagrantMutate
       end
 
       def generate_vagrantfile
+
+        if @force_virtio == true
+          disk_bus = 'virtio'
+        else
+          disk_bus = @input_box.disk_interface
+        end
+
         <<-EOF
         config.vm.provider :libvirt do |libvirt|
-          libvirt.disk_bus = '#{@input_box.disk_interface}'
+          libvirt.disk_bus = '#{disk_bus}'
         end
         EOF
       end

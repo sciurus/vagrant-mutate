@@ -8,6 +8,7 @@ module VagrantMutate
       options = {}
       options[:input_provider] = nil
       options[:version] = nil
+      options[:force_virtio] = false
 
       opts = OptionParser.new do |o|
         o.banner = 'Usage: vagrant mutate <box-name-or-file-or-url> <provider>'
@@ -18,6 +19,11 @@ module VagrantMutate
         o.on('--version VERSION',
              'Specify version for input box') do |p|
           options[:version] = p
+        end
+        # check for optional argument to force virtio disk driver in Vagrantfile (for libvirt)
+        o.on('--force-virtio',
+             'Force virtio disk driver in Vagrantfile for libvirt output provider') do |p|
+          options[:force_virtio] = true
         end
       end
 
@@ -41,7 +47,7 @@ module VagrantMutate
       output_loader = BoxLoader.new(@env)
       output_box = output_loader.prepare_for_output(input_box.name, options[:output_provider], input_box.version)
 
-      converter  = Converter::Converter.create(@env, input_box, output_box)
+      converter  = Converter::Converter.create(@env, input_box, output_box, options[:force_virtio])
       converter.convert
 
       input_loader.cleanup
