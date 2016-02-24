@@ -82,6 +82,8 @@ To export a box you created with vagrant mutate, just repackage it, e.g.
 
     vagrant box repackage precise32 libvirt
 
+If you want to force the output box to use virtio for the disk interface, no matter what interface the input box used, use the *--force-virtio* option.
+
 
 ## Debugging
 

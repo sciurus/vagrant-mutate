@@ -20,9 +20,8 @@ module VagrantMutate
              'Specify version for input box') do |p|
           options[:version] = p
         end
-        # check for optional argument to force virtio disk driver in Vagrantfile (for libvirt)
         o.on('--force-virtio',
-             'Force virtio disk driver in Vagrantfile for libvirt output provider') do |p|
+             'Force virtio disk driver') do |p|
           options[:force_virtio] = true
         end
       end
