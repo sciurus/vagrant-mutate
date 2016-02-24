@@ -17,7 +17,12 @@ module VagrantMutate
 
         uuid = nil
         gui = true
-        disk_bus = @input_box.disk_interface
+
+        if @force_virtio == true
+          disk_bus = 'virtio'
+        else
+          disk_bus = @input_box.disk_interface
+        end
 
         image_type = @output_box.image_format
         disk = @output_box.image_name
