@@ -6,6 +6,9 @@ module VagrantMutate
     class Converter
       def self.create(env, input_box, output_box, force_virtio='false')
       case output_box.provider_name
+        when 'bhyve'
+          require_relative 'bhyve'
+          Bhyve.new(env, input_box, output_box)
         when 'kvm'
           require_relative 'kvm'
           Kvm.new(env, input_box, output_box)
@@ -97,7 +100,9 @@ module VagrantMutate
         qemu_options = '-p -S 16k'
         qemu_version = Qemu.qemu_version()
         if qemu_version >= Gem::Version.new('1.1.0')
-          qemu_options += ' -o compat=1.1'
+          if output_format == 'qcow2'
+            qemu_options += ' -o compat=1.1'
+          end
         end
 
         command = "qemu-img convert #{qemu_options} -O #{output_format} #{input_file} #{output_file}"

@@ -137,6 +137,9 @@ module VagrantMutate
     def create_box(provider_name, name, version, dir)
       @logger.info "Creating box #{name} with provider #{provider_name} and version #{version} in #{dir}"
       case provider_name
+      when 'bhyve'
+        require_relative 'box/bhyve'
+        Box::Bhyve.new(@env, name, version, dir)
       when 'kvm'
         require_relative 'box/kvm'
         Box::Kvm.new(@env, name, version, dir)
