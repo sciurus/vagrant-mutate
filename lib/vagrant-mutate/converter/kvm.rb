@@ -43,12 +43,27 @@ module VagrantMutate
       private
 
       def find_kvm
-        qemu_bin_list = ['/usr/bin/qemu-system-x86_64',
-                         '/usr/bin/qemu-system-i386',
-                         '/usr/bin/qemu-kvm',
-                         '/usr/libexec/qemu-kvm',
-                         '/usr/bin/kvm']
-        qemu_bin = qemu_bin_list.find { |binary| File.exist? binary }
+        qemu_bin = nil
+        found = false
+
+        qemu_bin_list = ['qemu-system-x86_64',
+                         'qemu-system-i386',
+                         'qemu-kvm',
+                         'kvm']
+        qemu_bin_list.each do |qemu|
+          ENV["PATH"].split(":").each do |path|
+            file_path = File.join(path, qemu)
+            if File.exists?(file_path)
+              qemu_bin = file_path
+              found = true
+              break
+            end
+          end
+          if found == true
+            break
+          end
+        end
+
         unless qemu_bin
           fail Errors::QemuNotFound
         end
