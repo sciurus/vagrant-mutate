@@ -89,7 +89,7 @@ end
 cleanup
 ensure_pkg_dir
 build_plugin
-failures = test('virtualbox', %w(kvm libvirt))
+failures = test('virtualbox', %w(kvm libvirt bhyve))
 failures += test('libvirt', ['kvm'])
 failures += test('kvm', ['libvirt'])
 
