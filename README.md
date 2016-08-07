@@ -25,7 +25,7 @@ First, you must install [qemu-img](http://wiki.qemu.org/Main_Page) and the libvi
 
 #### Debian and derivatives
 
-    apt-get install qemu-utils libvirt-dev
+    apt-get install qemu-utils libvirt-dev ruby-dev
 
 #### Red Hat and derivatives
 
