@@ -1,20 +1,14 @@
 module VagrantMutate
   class Qemu
-      # http://stackoverflow.com/questions/2108727/which-in-ruby-checking-if-program-exists-in-path-from-ruby
     def self.verify_qemu_installed
+      qemu_img_bin = nil
       logger = Log4r::Logger.new('vagrant::mutate')
-      exts = ENV['PATHEXT'] ? ENV['PATHEXT'].split(';') : ['']
-      ENV['PATH'].split(File::PATH_SEPARATOR).each do |path|
-        exts.each do |ext|
-          exe = File.join(path, "qemu-img#{ext}")
-          if File.executable? exe
-            logger.info 'Found qemu'
-            return
-          end
-        end
+      qemu_img_bin = VagrantMutate.find_bin("qemu-img")
+      unless qemu_img_bin
+        fail Errors::QemuImgNotFound
       end
-      # if we make it here qemu-img command was not found
-      fail Errors::QemuImgNotFound
+      logger.info 'Found qemu-img: ' + qemu_img_bin
+      qemu_img_bin
     end
 
     def self.qemu_version()
