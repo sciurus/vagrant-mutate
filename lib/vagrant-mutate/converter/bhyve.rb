@@ -4,19 +4,29 @@ module VagrantMutate
   module Converter
     class Bhyve < Converter
       def generate_metadata
+
+        output_name = File.join(@output_box.dir, @output_box.image_name).shellescape
+
+        file_output = `file #{output_name}`
+
+        if file_output.include? "GRUB"
+         loader = "grub-bhyve"
+        else
+         loader = "bhyveload"
+        end
+
         {
           "provider" => @output_box.provider_name,
-          "firmware" => "bios",
-          "loader"   => "bhyveload"
         }
       end
 
       def generate_vagrantfile
-
+        memory = @input_box.memory / 1024 / 1024 # convert bytes to mebibytes
+        cpus = @input_box.cpus
         <<-EOF
         config.vm.provider :bhyve do |vm|
-          vm.memory = "512M"
-          vm.cpus = "1"
+          vm.memory = "#{memory}M"
+          vm.cpus = "#{cpus}"
         end
         EOF
       end
