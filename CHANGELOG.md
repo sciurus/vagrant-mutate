@@ -1,3 +1,6 @@
+# 1.2.0 (2016-08-15)
+* Add support for converting to bhyve (#86)
+
 # 1.1.1 (2016-02-24)
 * Add option to force use of virtio for disks (#82)
 
