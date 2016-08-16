@@ -1,4 +1,4 @@
-require 'nokogiri'
+require 'rexml/document'
 require_relative 'box'
 
 module VagrantMutate
@@ -14,7 +14,7 @@ module VagrantMutate
 
       # this is usually box-disk1.vmdk but some tools like packer customize it
       def image_name
-        ovf.xpath("//*[local-name()='References']/*[local-name()='File']")[0].attribute("href").value
+        ovf.elements['//References/File'].attributes['ovf:href']
       end
 
       # the architecture is not defined in the ovf file,
@@ -31,9 +31,9 @@ module VagrantMutate
       def mac_address
         mac = nil
 
-        ovf.xpath("//*[local-name()='Machine']/*[local-name()='Hardware']/*[local-name()='Network']/*[local-name()='Adapter']").each do |net|
-        if net.attribute("enabled").value == "true"
-            mac = net.attribute("MACAddress").value
+        ovf.elements.each('//vbox:Machine/Hardware//Adapter') do |ele|
+          if ele.attributes['enabled'] == 'true'
+            mac = ele.attributes['MACAddress']
             break
           end
         end
@@ -48,9 +48,9 @@ module VagrantMutate
       def cpus
         cpu_count = nil
 
-        ovf.xpath("//*[local-name()='VirtualHardwareSection']/*[local-name()='Item']/*[local-name()='ResourceType']").each do |item|
-          if item.text == "3"
-            cpu_count = item.parent.xpath("*[local-name()='VirtualQuantity']").text
+        ovf.elements.each('//VirtualHardwareSection/Item') do |device|
+          if device.elements['rasd:ResourceType'].text == '3'
+            cpu_count = device.elements['rasd:VirtualQuantity'].text
           end
         end
 
@@ -64,10 +64,10 @@ module VagrantMutate
       def memory
         memory_in_bytes = nil
 
-        ovf.xpath("//*[local-name()='VirtualHardwareSection']/*[local-name()='Item']/*[local-name()='ResourceType']").each do |item|
-          if item.text == "4"
-            memory_in_bytes = size_in_bytes(item.parent.xpath("*[local-name()='VirtualQuantity']").text,
-                                            item.parent.xpath("*[local-name()='AllocationUnits']").text)
+        ovf.elements.each('//VirtualHardwareSection/Item') do |device|
+          if device.elements['rasd:ResourceType'].text == '4'
+            memory_in_bytes = size_in_bytes(device.elements['rasd:VirtualQuantity'].text,
+                                            device.elements['rasd:AllocationUnits'].text)
           end
         end
 
@@ -81,18 +81,18 @@ module VagrantMutate
       def disk_interface
         controller_type = {}
         controller_used_by_disk = nil
-        ovf.xpath("//*[local-name()='VirtualHardwareSection']/*[local-name()='Item']/*[local-name()='ResourceType']").each do |device|
+        ovf.elements.each('//VirtualHardwareSection/Item') do |device|
           # when we find a controller, store its ID and type
           # when we find a disk, store the ID of the controller it is connected to
-          case device.text
+          case device.elements['rasd:ResourceType'].text
           when '5'
-            controller_type[device.parent.xpath("*[local-name()='InstanceID']").text] = 'ide'
-          when '6'
-            controller_type[device.parent.xpath("*[local-name()='InstanceID']").text] = 'scsi'
-          when '20'
-            controller_type[device.parent.xpath("*[local-name()='InstanceID']").text] = 'sata'
-          when '17'
-            controller_used_by_disk = device.parent.xpath("*[local-name()='Parent']").text
+            controller_type[device.elements['rasd:InstanceID'].text] = 'ide'
+           when '6'
+             controller_type[device.elements['rasd:InstanceID'].text] = 'scsi'
+           when '20'
+             controller_type[device.elements['rasd:InstanceID'].text] = 'sata'
+           when '17'
+             controller_used_by_disk = device.elements['rasd:Parent'].text
           end
         end
         if controller_used_by_disk and controller_type[controller_used_by_disk]
@@ -111,7 +111,7 @@ module VagrantMutate
 
         ovf_file = File.join(@dir, 'box.ovf')
         begin
-          @ovf = File.open(ovf_file) { |f| Nokogiri::XML(f) }
+          @ovf = REXML::Document.new(File.read(ovf_file))
         rescue => e
           raise Errors::BoxAttributeError, error_message: e.message
         end

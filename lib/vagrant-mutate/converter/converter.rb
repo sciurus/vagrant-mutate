@@ -37,10 +37,10 @@ module VagrantMutate
           "to #{@output_box.provider_name}."
 
         @input_box.verify_format
+        write_disk
         write_metadata
         write_vagrantfile
         write_specific_files
-        write_disk
       end
 
       private
