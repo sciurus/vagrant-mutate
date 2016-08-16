@@ -1,5 +1,5 @@
 require_relative 'box'
-require 'rexml/document'
+require 'nokogiri'
 
 module VagrantMutate
   module Box
@@ -20,8 +20,8 @@ module VagrantMutate
       def disk_interface
         domain_file = File.join(@dir, 'box.xml')
         begin
-          domain = REXML::Document.new(File.read(domain_file))
-          domain.elements['/domain/devices/disk/target'].attributes['bus']
+          domain = File.open(domain_file) { |f| Nokogiri::XML(f) }
+          domain.xpath("//*[local-name()='domain']/*[local-name()='devices']/*[local-name()='disk']/*[local-name()='target']").attribute('bus')
         rescue => e
           raise Errors::BoxAttributeError, error_message: e.message
         end
