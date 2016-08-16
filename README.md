@@ -6,16 +6,13 @@ Vagrant-mutate is a vagrant plugin to convert vagrant boxes to work with differe
 
 * Virtualbox to kvm
 * Virtualbox to libvirt
+* Virtualbox to bhyve
 * Libvirt to kvm
 * Kvm to libvirt
 
 ## Compatibility
 
-Throughout its development vagrant-mutate has been tested against the following versions. It may work with other versions too. Note that Vagrant-mutate 0.3 and later requires Vagrant 1.5. If you are using an older vagrant, install vagrant-mutate version 0.2.6.
-
-* [vagrant](http://www.vagrantup.com) 1.3.5, 1.4.3, and 1.5.4
-* [vagrant-kvm](https://github.com/adrahon/vagrant-kvm) 0.1.4
-* [vagrant-libvirt](https://github.com/pradels/vagrant-libvirt) 0.0.11
+Vagrant-mutate 0.3 and later requires Vagrant 1.5. If you are using an older vagrant, install vagrant-mutate version 0.2.6.
 
 ## Installation
 
