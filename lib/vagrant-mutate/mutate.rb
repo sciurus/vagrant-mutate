@@ -9,6 +9,7 @@ module VagrantMutate
       options[:input_provider] = nil
       options[:version] = nil
       options[:force_virtio] = false
+      options[:quiet] = false
 
       opts = OptionParser.new do |o|
         o.banner = 'Usage: vagrant mutate <box-name-or-file-or-url> <provider>'
@@ -24,8 +25,10 @@ module VagrantMutate
              'Force virtio disk driver') do |p|
           options[:force_virtio] = true
         end
+        o.on("--quiet", "Convert silently") do |v|
+          options[:quiet] = true
+        end
       end
-
       argv = parse_options(opts)
       return unless argv
 
@@ -46,12 +49,14 @@ module VagrantMutate
       output_loader = BoxLoader.new(@env)
       output_box = output_loader.prepare_for_output(input_box.name, options[:output_provider], input_box.version)
 
-      converter  = Converter::Converter.create(@env, input_box, output_box, options[:force_virtio])
+      converter  = Converter::Converter.create(@env, input_box, output_box, options[:force_virtio], options[:quiet])
       converter.convert
 
       input_loader.cleanup
 
-      @env.ui.info "The box #{output_box.name} (#{output_box.provider_name}) is now ready to use."
+      if options[:quiet] == false
+        @env.ui.info "The box #{output_box.name} (#{output_box.provider_name}) is now ready to use."
+      end
     end
   end
 end

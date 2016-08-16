@@ -4,27 +4,28 @@ require 'shellwords'
 module VagrantMutate
   module Converter
     class Converter
-      def self.create(env, input_box, output_box, force_virtio='false')
+      def self.create(env, input_box, output_box, force_virtio='false', quiet='false')
       case output_box.provider_name
         when 'bhyve'
           require_relative 'bhyve'
-          Bhyve.new(env, input_box, output_box)
+          Bhyve.new(env, input_box, output_box, force_virtio, quiet)
         when 'kvm'
           require_relative 'kvm'
-          Kvm.new(env, input_box, output_box)
+          Kvm.new(env, input_box, output_box, force_virtio, quiet)
         when 'libvirt'
           require_relative 'libvirt'
-          Libvirt.new(env, input_box, output_box, force_virtio)
+          Libvirt.new(env, input_box, output_box, force_virtio, quiet)
         else
           fail Errors::ProviderNotSupported, provider: output_box.provider_name, direction: 'output'
         end
       end
 
-      def initialize(env, input_box, output_box, force_virtio='false')
+      def initialize(env, input_box, output_box, force_virtio, quiet)
         @env = env
         @input_box  = input_box
         @output_box = output_box
         @force_virtio = force_virtio
+        @quiet = quiet
         @logger = Log4r::Logger.new('vagrant::mutate')
       end
 
@@ -33,8 +34,10 @@ module VagrantMutate
           fail Errors::ProvidersMatch
         end
 
-        @env.ui.info "Converting #{@input_box.name} from #{@input_box.provider_name} "\
-          "to #{@output_box.provider_name}."
+        if @quiet == false
+          @env.ui.info "Converting #{@input_box.name} from #{@input_box.provider_name} "\
+            "to #{@output_box.provider_name}."
+        end
 
         @input_box.verify_format
         write_disk
@@ -97,7 +100,11 @@ module VagrantMutate
 
         # p for progress bar
         # S for sparse file
-        qemu_options = '-p -S 16k'
+        if @quiet == true
+          qemu_options = '-S 16k'
+        else
+          qemu_options = '-p -S 16k'
+        end
         qemu_version = Qemu.qemu_version()
         if qemu_version >= Gem::Version.new('1.1.0')
           if output_format == 'qcow2'
