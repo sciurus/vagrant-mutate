@@ -1,0 +1,6 @@
+Vagrant.configure("2") do |config|
+        config.vm.provider :bhyve do |vm|
+          vm.memory = "256M"
+          vm.cpus = "1"
+        end
+end

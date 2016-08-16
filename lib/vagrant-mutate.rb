@@ -6,6 +6,20 @@ module VagrantMutate
     @source_root ||= Pathname.new(File.expand_path('../../', __FILE__))
   end
 
+  # http://stackoverflow.com/questions/2108727/which-in-ruby-checking-if-program-exists-in-path-from-ruby
+  def self.find_bin(bin)
+    exts = ENV['PATHEXT'] ? ENV['PATHEXT'].split(';') : ['']
+    ENV['PATH'].split(File::PATH_SEPARATOR).each do |path|
+      exts.each do |ext|
+        exe = File.join(path, "#{bin}#{ext}")
+        if File.executable? exe
+          return exe if File.executable?(exe) && !File.directory?(exe)
+        end
+      end
+    end
+    return nil
+  end
+
   class Plugin < Vagrant.plugin('2')
     name 'vagrant-mutate'
 

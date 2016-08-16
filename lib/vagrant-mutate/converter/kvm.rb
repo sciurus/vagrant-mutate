@@ -43,15 +43,22 @@ module VagrantMutate
       private
 
       def find_kvm
-        qemu_bin_list = ['/usr/bin/qemu-system-x86_64',
-                         '/usr/bin/qemu-system-i386',
-                         '/usr/bin/qemu-kvm',
-                         '/usr/libexec/qemu-kvm',
-                         '/usr/bin/kvm']
-        qemu_bin = qemu_bin_list.find { |binary| File.exist? binary }
+        qemu_bin = nil
+
+        qemu_bin_list = ['qemu-system-x86_64',
+                         'qemu-system-i386',
+                         'qemu-kvm',
+                         'kvm']
+        logger = Log4r::Logger.new('vagrant::mutate')
+        qemu_bin_list.each do |qemu|
+          qemu_bin = VagrantMutate.find_bin(qemu)
+          break
+        end
+
         unless qemu_bin
           fail Errors::QemuNotFound
         end
+        logger.info 'Found qemu_bin: ' + qemu_bin
         qemu_bin
       end
 
