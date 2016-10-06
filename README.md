@@ -26,7 +26,7 @@ First, you must install [qemu-img](http://wiki.qemu.org/Main_Page) and the libvi
 
 #### Red Hat and derivatives
 
-    yum install qemu-img libvirt-devel ruby-libvirt ruby-devel
+    yum install qemu-img libvirt-devel rubygem-ruby-libvirt ruby-devel
 
 #### OS X
 
