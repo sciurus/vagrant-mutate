@@ -73,7 +73,7 @@ If you have a box for multiple providers, you must specify the provider to use f
     $ vagrant box list
     precise32  (kvm)
     precise32  (virtualbox)
-    $ vagrant mutate --input_provider=virtualbox precise32 libvirt
+    $ vagrant mutate --input-provider=virtualbox precise32 libvirt
 
 To export a box you created with vagrant mutate, just repackage it, e.g.
 
