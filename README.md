@@ -2,6 +2,10 @@
 
 Vagrant-mutate is a vagrant plugin to convert vagrant boxes to work with different providers.
 
+## Maintenance Notice
+
+I am no longer actively maintaining vagrant-mutate. If you are interested in taking over, let me know.
+
 ## Supported Conversions
 
 * Virtualbox to kvm
