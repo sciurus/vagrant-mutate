@@ -123,7 +123,7 @@ module VagrantMutate
       # defaults to false because ovf MB != megabytes
       def size_in_bytes(qty, unit, mib = false)
         qty = qty.to_i
-        unit = unit.downcase
+        unit = unit.downcase.gsub(/\s+/, '')
         unless mib
           case unit
           when 'kb', 'kilobytes'
@@ -139,15 +139,15 @@ module VagrantMutate
           qty
         when 'kb', 'kilobytes'
           (qty * 1000)
-        when 'kib', 'kibibytes'
+        when 'kib', 'kibibytes', 'byte*2^10'
           (qty * 1024)
         when 'mb', 'megabytes'
           (qty * 1_000_000)
-        when 'm', 'mib', 'mebibytes'
+        when 'm', 'mib', 'mebibytes', 'byte*2^20'
           (qty * 1_048_576)
         when 'gb', 'gigabytes'
           (qty * 1_000_000_000)
-        when 'g', 'gib', 'gibibytes'
+        when 'g', 'gib', 'gibibytes', 'byte*2^30'
           (qty * 1_073_741_824)
         else
           fail ArgumentError, "Unknown unit #{unit}"
